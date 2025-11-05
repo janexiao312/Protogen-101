@@ -560,21 +560,22 @@ body {
     position: absolute;
     top: -20px;
     right: -10px;
-    z-index: 15;
+    z-index: 999;
     animation: float 3s ease-in-out infinite;
-    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     cursor: pointer;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    /* Temporary debug border to see hover area */
-    border: 2px dashed rgba(255, 0, 0, 0.3);
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
 }
 
 .dog-mascot:hover {
     animation-play-state: paused;
-    transform: translateX(-350px) translateY(-20px) scale(1.2);
-    transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform: translateX(-400px) translateY(-10px) scale(1.1);
+    transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 /* Increase hover area for better interaction */
@@ -593,6 +594,7 @@ body {
     width: 80px;
     height: 100px;
     padding: 10px;
+    pointer-events: none;
 }
 
 /* Dog Head */
