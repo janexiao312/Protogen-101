@@ -47,10 +47,12 @@ body {
     justify-content: center;
     padding: 20px;
     line-height: 1.6;
+    overflow-x: hidden;
 }
 
 /* Profile Container */
 .profile-container {
+    position: relative;
     width: 100%;
     max-width: 420px;
 }
@@ -63,7 +65,7 @@ body {
     text-align: center;
     transition: var(--transition);
     position: relative;
-    overflow: hidden;
+    overflow: visible;
 }
 
 .profile-card::before {
@@ -87,6 +89,7 @@ body {
     margin: 0 auto 28px;
     width: 140px;
     height: 140px;
+    overflow: visible;
 }
 
 .profile-image {
@@ -553,16 +556,18 @@ body {
 
 .dog-mascot {
     position: absolute;
-    top: 20px;
-    right: -120px;
-    z-index: 10;
+    top: -60px;
+    right: -10px;
+    z-index: 15;
     animation: float 3s ease-in-out infinite;
-    transition: transform 0.3s ease;
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    cursor: pointer;
 }
 
 .dog-mascot:hover {
     animation-play-state: paused;
-    transform: translateY(-5px) scale(1.1);
+    transform: translateX(-380px) translateY(-20px) scale(1.2);
+    transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .dog-body {
@@ -806,14 +811,13 @@ body {
 /* Responsive adjustments for dog mascot */
 @media (max-width: 768px) {
     .dog-mascot {
-        position: relative;
-        top: 0;
-        right: 0;
-        margin: 20px auto;
-        transform: scale(0.8);
+        top: -40px;
+        right: -5px;
+        transform: scale(0.7);
     }
     
     .dog-mascot:hover {
-        transform: scale(0.9);
+        transform: translateX(-250px) translateY(-15px) scale(0.8);
+        transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 }
