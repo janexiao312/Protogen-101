@@ -55,12 +55,14 @@ body {
     position: relative;
     width: 100%;
     max-width: 420px;
+    overflow: visible;
 }
 
 .profile-card {
     background: var(--card-background);
     border-radius: 32px;
     padding: 48px 36px;
+    padding-top: 80px;
     box-shadow: 0 20px 60px var(--shadow-medium), 0 8px 24px var(--shadow-light);
     text-align: center;
     transition: var(--transition);
@@ -556,24 +558,41 @@ body {
 
 .dog-mascot {
     position: absolute;
-    top: -60px;
+    top: -20px;
     right: -10px;
     z-index: 15;
     animation: float 3s ease-in-out infinite;
     transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     cursor: pointer;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    /* Temporary debug border to see hover area */
+    border: 2px dashed rgba(255, 0, 0, 0.3);
 }
 
 .dog-mascot:hover {
     animation-play-state: paused;
-    transform: translateX(-380px) translateY(-20px) scale(1.2);
+    transform: translateX(-350px) translateY(-20px) scale(1.2);
     transition: all 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Increase hover area for better interaction */
+.dog-mascot::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: -20px;
+    right: -20px;
+    bottom: -20px;
+    z-index: -1;
 }
 
 .dog-body {
     position: relative;
     width: 80px;
     height: 100px;
+    padding: 10px;
 }
 
 /* Dog Head */
