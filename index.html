@@ -9,9 +9,14 @@
 </head>
 <body>
     <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-image-container">
+                <img src="picture.jpg" alt="Jane - Experience Designer" class="profile-image">
+            </div>
+        </div>
             
-            <div class="profile-content">
-                <h1 class="profile-name">Jane</h1>
+        <div class="profile-content">
+            <h1 class="profile-name">Jane</h1>
                 <p class="profile-role">Experience Designer</p>
                 
                 <div class="skills-tags">
@@ -77,8 +82,22 @@
                 </div>
             </div>
         </div>
+    </div>
     
     <!-- Contact Modal -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Get in touch</h3>
+                <button class="close-btn" onclick="closeContactModal()" aria-label="Close modal">&times;</button>
+            </div>
+            <div class="contact-options">
+                <div class="contact-option">
+                    <div class="contact-icon">📧</div>
+                    <div class="contact-info">
+                        <strong>Email</strong>
+                        <p>jane@example.com</p>
+                    </div>
                 </div>
                 <div class="contact-option">
                     <div class="contact-icon">🌐</div>
@@ -86,11 +105,11 @@
                         <strong>Portfolio</strong>
                         <p>jane-design.com</p>
                     </div>
-
-                    
                 </div>
             </div>
         </div>
     </div>
+
+    <script src="profile-script.js"></script>
     
 </html>
