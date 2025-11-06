@@ -558,8 +558,9 @@ body {
 
 .dog-mascot {
     position: absolute;
-    top: -20px;
-    right: -10px;
+    top: 50%;
+    right: -140px;
+    transform: translateY(-50%);
     z-index: 999;
     animation: float 3s ease-in-out infinite;
     transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -574,7 +575,7 @@ body {
 
 .dog-mascot:hover {
     animation-play-state: paused;
-    transform: translateX(-400px) translateY(-10px) scale(1.1);
+    transform: translateX(-560px) translateY(-50%) scale(1.1);
     transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
@@ -832,13 +833,15 @@ body {
 /* Responsive adjustments for dog mascot */
 @media (max-width: 768px) {
     .dog-mascot {
-        top: -40px;
-        right: -5px;
-        transform: scale(0.7);
+        position: relative;
+        top: 0;
+        right: 0;
+        transform: translateY(0) scale(0.7);
+        margin: 20px auto;
     }
     
     .dog-mascot:hover {
-        transform: translateX(-250px) translateY(-15px) scale(0.8);
+        transform: translateY(0) scale(0.8);
         transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 }
