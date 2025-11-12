@@ -484,18 +484,18 @@ const WeatherWidget = {
     // Mock data for demonstration (replace with real API)
     mockData: {
         current: {
-            city: 'San Francisco',
-            temperature: 24,
-            feelsLike: 26,
-            humidity: 65,
-            windSpeed: 12,
-            description: 'sunny',
-            emoji: '☀️'
+            city: 'Houston',
+            temperature: 28,
+            feelsLike: 32,
+            humidity: 78,
+            windSpeed: 8,
+            description: 'partly cloudy',
+            emoji: '⛅'
         },
         forecast: [
-            { day: 'Today', emoji: '☀️', high: 26, low: 18 },
-            { day: 'Tomorrow', emoji: '⛅', high: 23, low: 16 },
-            { day: 'Thursday', emoji: '🌧️', high: 20, low: 14 }
+            { day: 'Today', emoji: '⛅', high: 28, low: 22 },
+            { day: 'Tomorrow', emoji: '☀️', high: 30, low: 24 },
+            { day: 'Thursday', emoji: '🌧️', high: 26, low: 20 }
         ]
     },
 

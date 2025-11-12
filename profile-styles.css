@@ -54,7 +54,7 @@ body {
 .profile-container {
     position: relative;
     width: 100%;
-    max-width: 420px;
+    max-width: 600px;
     overflow: visible;
 }
 
@@ -851,19 +851,18 @@ body {
    ========================================== */
 
 .weather-widget {
-    position: fixed;
-    top: 30px;
-    left: 30px;
-    width: 280px;
+    position: relative;
+    width: 100%;
+    max-width: 100%;
     background: var(--card-background);
     border-radius: 20px;
     padding: 20px;
+    margin: 30px 0;
     box-shadow: 0 15px 40px var(--shadow-medium), 0 6px 20px var(--shadow-light);
     backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    z-index: 100;
     transition: all 0.3s ease;
-    animation: slideInLeft 0.8s ease-out;
+    animation: slideInUp 0.8s ease-out;
 }
 
 .weather-widget:hover {
@@ -1056,14 +1055,37 @@ body {
     }
 }
 
+@keyframes slideInUp {
+    0% {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
 /* Responsive adjustments for weather widget */
 @media (max-width: 768px) {
     .weather-widget {
-        position: relative;
-        top: 0;
-        left: 0;
-        width: 100%;
-        max-width: 350px;
-        margin: 20px auto;
+        margin: 20px 0;
+        padding: 15px;
+    }
+    
+    .weather-header {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .weather-main {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+    
+    .forecast-container {
+        gap: 5px;
     }
 }
