@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI Portfolio Navigator - Ask about Jane's experience design work, AI projects, and technical capabilities">
+    <meta name="keywords" content="AI portfolio, experience designer, Jane, UX design, AI integration, portfolio navigation">
+    <meta name="author" content="Jane - Experience Designer">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="AI Portfolio Navigator - Jane's Portfolio">
+    <meta property="og:description" content="Explore Jane's work through intelligent conversation - ask about her design experience, AI projects, and capabilities">
+    <meta property="og:image" content="./picture.jpg">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="./picture.jpg">
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="profile-styles.css">
+    <link rel="stylesheet" href="ai-navigator-styles.css">
+    
+    <!-- Preload Critical Resources -->
+    <link rel="preload" href="ai-navigator-script.js" as="script">
+    
+    <title>AI Portfolio Navigator | Jane - Experience Designer</title>
+</head>
+<body>
+    <!-- Skip Navigation for Accessibility -->
+    <a href="#main-content" class="skip-nav">Skip to main content</a>
+    
+    <!-- Header Navigation -->
+    <header class="chat-header" role="banner">
+        <nav class="header-nav" role="navigation" aria-label="Main navigation">
+            <a href="index.html" class="nav-link" aria-label="Back to profile page">
+                <svg class="nav-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5"></path>
+                    <path d="M12 19l-7-7 7-7"></path>
+                </svg>
+                Back to Portfolio
+            </a>
+            <div class="header-title">
+                <h1>AI Portfolio Navigator</h1>
+                <p>Ask me anything about Jane's work</p>
+            </div>
+            <button class="help-button" type="button" aria-label="Show help information" title="How to use the AI navigator">
+                <svg class="help-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            </button>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="chat-main" role="main">
+        <div class="chat-container">
+            
+            <!-- Chat Interface -->
+            <div class="chat-interface" role="region" aria-labelledby="chat-title">
+                
+                <!-- Chat Messages Area -->
+                <div id="chat-messages" class="chat-messages" role="log" aria-live="polite" aria-label="Conversation messages">
+                    
+                    <!-- Welcome Message -->
+                    <div class="message ai-message welcome-message" role="article">
+                        <div class="message-avatar">
+                            <div class="ai-avatar">
+                                <svg class="ai-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2l3.09 6.26L22 9l-5.91 4.74L18 22l-6-3.27L6 22l1.91-8.26L2 9l6.91-.74L12 2z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-text">
+                                <h2 id="chat-title">Hi! I'm your AI guide to Jane's portfolio</h2>
+                                <p>I can help you learn about Jane's experience design background, AI projects, technical skills, and find exactly what you're looking for in her portfolio.</p>
+                            </div>
+                            <div class="suggested-questions">
+                                <h3>Try asking me:</h3>
+                                <div class="question-suggestions">
+                                    <button class="suggestion-chip" type="button" data-question="What kind of design experience does Jane have?">
+                                        What kind of design experience does Jane have?
+                                    </button>
+                                    <button class="suggestion-chip" type="button" data-question="Tell me about her AI projects">
+                                        Tell me about her AI projects
+                                    </button>
+                                    <button class="suggestion-chip" type="button" data-question="Can she help with UX research?">
+                                        Can she help with UX research?
+                                    </button>
+                                    <button class="suggestion-chip" type="button" data-question="Show me her technical skills">
+                                        Show me her technical skills
+                                    </button>
+                                    <button class="suggestion-chip" type="button" data-question="How can I contact her for a project?">
+                                        How can I contact her for a project?
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Typing Indicator (Hidden by default) -->
+                    <div id="typing-indicator" class="message ai-message typing-message" role="status" aria-hidden="true" aria-label="AI is thinking">
+                        <div class="message-avatar">
+                            <div class="ai-avatar">
+                                <svg class="ai-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 2l3.09 6.26L22 9l-5.91 4.74L18 22l-6-3.27L6 22l1.91-8.26L2 9l6.91-.74L12 2z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="message-content">
+                            <div class="typing-dots">
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <!-- Portfolio Preview Area -->
+                <div id="portfolio-preview" class="portfolio-preview" role="region" aria-labelledby="preview-title" aria-hidden="true">
+                    <div class="preview-header">
+                        <h3 id="preview-title">Portfolio Preview</h3>
+                        <button class="preview-close" type="button" aria-label="Close portfolio preview">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                    <div id="preview-content" class="preview-content">
+                        <!-- Dynamic portfolio content will be inserted here -->
+                    </div>
+                </div>
+
+                <!-- Chat Input Area -->
+                <div class="chat-input-container" role="region" aria-label="Message input">
+                    <form id="chat-form" class="chat-form" role="form" aria-label="Send message">
+                        <div class="input-group">
+                            <label for="message-input" class="sr-only">Ask about Jane's portfolio</label>
+                            <input 
+                                type="text" 
+                                id="message-input" 
+                                class="message-input" 
+                                placeholder="Ask about Jane's work, experience, or skills..."
+                                autocomplete="off"
+                                aria-describedby="input-help"
+                                maxlength="500"
+                            >
+                            <button 
+                                type="submit" 
+                                class="send-button" 
+                                id="send-button"
+                                aria-label="Send message"
+                                disabled
+                            >
+                                <svg class="send-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                                    <polygon points="22,2 15,22 11,13 2,9"></polygon>
+                                </svg>
+                            </button>
+                        </div>
+                        <div id="input-help" class="input-help">
+                            <span class="character-count" aria-live="polite">0/500 characters</span>
+                            <span class="input-hint">Press Enter to send, Shift+Enter for new line</span>
+                        </div>
+                    </form>
+                </div>
+                
+            </div>
+
+            <!-- Conversation Controls -->
+            <div class="conversation-controls" role="toolbar" aria-label="Conversation controls">
+                <button type="button" class="control-button" id="clear-chat" aria-label="Clear conversation">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="3,6 5,6 21,6"></polyline>
+                        <path d="m19,6v14a2,2 0 0,1-2,2H7a2,2 0 0,1-2-2V6m3,0V4a2,2 0 0,1,2-2h4a2,2 0 0,1,2,2v2"></path>
+                        <line x1="10" y1="11" x2="10" y2="17"></line>
+                        <line x1="14" y1="11" x2="14" y2="17"></line>
+                    </svg>
+                    Clear Chat
+                </button>
+                <button type="button" class="control-button" id="export-chat" aria-label="Export conversation">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7,10 12,15 17,10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Export
+                </button>
+                <button type="button" class="control-button" id="toggle-suggestions" aria-label="Toggle suggested questions" aria-pressed="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"></path>
+                    </svg>
+                    Smart Suggestions
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Help Modal -->
+    <div id="help-modal" class="help-modal" role="dialog" aria-labelledby="help-modal-title" aria-hidden="true">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="help-modal-title">How to Use the AI Portfolio Navigator</h2>
+                <button class="modal-close" type="button" aria-label="Close help modal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="help-section">
+                    <h3>💬 Natural Conversation</h3>
+                    <p>Ask questions in natural language about Jane's work, experience, and capabilities. The AI understands context and can help you find specific information.</p>
+                </div>
+                <div class="help-section">
+                    <h3>🧭 Smart Navigation</h3>
+                    <p>Request to see specific portfolio sections or types of work. The AI can guide you to relevant projects and experience areas.</p>
+                </div>
+                <div class="help-section">
+                    <h3>🎯 Example Questions</h3>
+                    <ul>
+                        <li>"What's Jane's background in UX design?"</li>
+                        <li>"Show me her AI integration projects"</li>
+                        <li>"Can she help with user research for fintech?"</li>
+                        <li>"What technologies does she work with?"</li>
+                    </ul>
+                </div>
+                <div class="help-section">
+                    <h3>⚡ Quick Tips</h3>
+                    <ul>
+                        <li>Be specific about what you're looking for</li>
+                        <li>Ask follow-up questions for more detail</li>
+                        <li>Use the suggested questions to get started</li>
+                        <li>Export conversations for future reference</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Chat Widget (for integration with profile page) -->
+    <div id="floating-chat-widget" class="floating-chat-widget" aria-hidden="true" role="complementary" aria-label="AI Portfolio Navigator Widget">
+        
+        <!-- Widget Toggle Button -->
+        <button class="widget-toggle" type="button" aria-label="Open AI Portfolio Navigator" title="Ask about Jane's portfolio">
+            <div class="widget-icon">
+                <svg class="chat-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </div>
+            <div class="widget-pulse"></div>
+        </button>
+
+        <!-- Mini Chat Interface -->
+        <div class="widget-chat" aria-hidden="true">
+            <div class="widget-header">
+                <h3>Ask about Jane's portfolio</h3>
+                <div class="widget-status">
+                    <span class="status-dot"></span>
+                    AI Assistant Online
+                </div>
+            </div>
+            
+            <div class="widget-messages" id="widget-messages" role="log" aria-live="polite">
+                <div class="widget-message ai-message">
+                    <div class="message-text">
+                        👋 Hi! I can help you learn about Jane's work. What would you like to know?
+                    </div>
+                    <div class="widget-suggestions">
+                        <button class="widget-suggestion" data-question="Tell me about Jane's experience">Design Experience</button>
+                        <button class="widget-suggestion" data-question="What AI projects has she worked on?">AI Projects</button>
+                        <button class="widget-suggestion" data-question="How can I contact her?">Contact Info</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="widget-input">
+                <form class="widget-form">
+                    <input type="text" class="widget-input-field" placeholder="Ask anything..." maxlength="300">
+                    <button type="submit" class="widget-send" aria-label="Send message">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22,2 15,22 11,13 2,9"></polygon>
+                        </svg>
+                    </button>
+                </form>
+                <div class="widget-footer">
+                    <button class="expand-link" type="button">Open full chat →</button>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- Error Boundary -->
+    <div id="error-boundary" class="error-boundary" role="alert" aria-hidden="true">
+        <div class="error-content">
+            <svg class="error-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <h2>Chat Temporarily Unavailable</h2>
+            <p>We're sorry, but the AI navigator is currently experiencing issues. Please try refreshing the page or visit Jane's portfolio directly.</p>
+            <div class="error-actions">
+                <button type="button" class="error-retry" onclick="window.location.reload()">
+                    Retry
+                </button>
+                <a href="index.html" class="error-portfolio">
+                    View Portfolio
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="ai-navigator-script.js" defer></script>
+    
+    <!-- Performance and Analytics -->
+    <script>
+        // Basic performance tracking
+        if ('performance' in window && 'measure' in window.performance) {
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    const perfData = performance.getEntriesByType('navigation')[0];
+                    console.log('🤖 AI Navigator load time:', Math.round(perfData.loadEventEnd - perfData.fetchStart) + 'ms');
+                }, 100);
+            });
+        }
+
+        // Basic usage analytics (privacy-friendly)
+        window.portfolioAnalytics = {
+            trackEvent: function(event, data) {
+                // Store anonymized usage patterns for portfolio optimization
+                const analytics = JSON.parse(localStorage.getItem('portfolio_analytics') || '[]');
+                analytics.push({
+                    event,
+                    timestamp: Date.now(),
+                    data: data || {}
+                });
+                // Keep only last 100 events
+                if (analytics.length > 100) {
+                    analytics.splice(0, analytics.length - 100);
+                }
+                localStorage.setItem('portfolio_analytics', JSON.stringify(analytics));
+                console.log('📊 Analytics:', event, data);
+            }
+        };
+    </script>
+</body>
+</html>
