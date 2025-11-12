@@ -854,20 +854,18 @@ body {
     position: relative;
     width: 100%;
     max-width: 100%;
-    background: var(--card-background);
-    border-radius: 20px;
-    padding: 20px;
-    margin: 30px 0;
-    box-shadow: 0 15px 40px var(--shadow-medium), 0 6px 20px var(--shadow-light);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: transparent;
+    border-radius: 0;
+    padding: 30px 0 0 0;
+    margin: 30px 0 20px 0;
+    border-top: 1px solid var(--border-color);
     transition: all 0.3s ease;
     animation: slideInUp 0.8s ease-out;
 }
 
 .weather-widget:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 50px var(--shadow-heavy), 0 8px 25px var(--shadow-medium);
+    transform: none;
+    box-shadow: none;
 }
 
 .weather-header {
@@ -1070,7 +1068,7 @@ body {
 @media (max-width: 768px) {
     .weather-widget {
         margin: 20px 0;
-        padding: 15px;
+        padding-top: 20px;
     }
     
     .weather-header {
