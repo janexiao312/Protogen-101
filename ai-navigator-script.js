@@ -14,6 +14,22 @@ class PortfolioNavigator {
         this.currentConversationId = this.generateConversationId();
         this.isInitialized = false;
         
+        // Conversation persistence settings
+        this.persistenceEnabled = true;
+        this.maxStoredMessages = 50;
+        this.sessionTimeout = 24 * 60 * 60 * 1000; // 24 hours
+        
+        // Analytics tracking
+        this.analyticsData = {
+            sessionStart: Date.now(),
+            popularQueries: new Map(),
+            navigationPatterns: [],
+            responseMetrics: []
+        };
+        
+        // Conversation starters cache
+        this.conversationStarters = null;
+        
         // Portfolio knowledge base - Comprehensive structured data about Jane's work and skills
         this.portfolioData = {
             personal: {
@@ -210,13 +226,21 @@ class PortfolioNavigator {
             // Set up accessibility features
             this.setupAccessibility();
             
+            // Load conversation history if available
+            const historyLoaded = this.loadConversationHistory();
+            if (!historyLoaded) {
+                // Show fresh conversation starters
+                this.showConversationStarters();
+            }
+            
             this.isInitialized = true;
             console.log('✅ PortfolioNavigator ready');
             
             // Track initialization
             this.trackEvent('navigator_initialized', {
                 timestamp: Date.now(),
-                conversationId: this.currentConversationId
+                conversationId: this.currentConversationId,
+                historyLoaded
             });
             
         } catch (error) {
@@ -277,7 +301,7 @@ class PortfolioNavigator {
 
         // Control buttons
         if (this.elements.clearButton) {
-            this.elements.clearButton.addEventListener('click', () => this.clearConversation());
+            this.elements.clearButton.addEventListener('click', () => this.clearConversationEnhanced());
         }
         
         if (this.elements.exportButton) {
@@ -298,10 +322,16 @@ class PortfolioNavigator {
             helpBackdrop.addEventListener('click', () => this.hideHelp());
         }
 
-        // Portfolio preview close
+        // Portfolio preview controls
         const previewCloseBtn = document.querySelector('.preview-close');
+        const previewExpandBtn = document.querySelector('.preview-expand');
+        
         if (previewCloseBtn) {
             previewCloseBtn.addEventListener('click', () => this.hidePortfolioPreview());
+        }
+        
+        if (previewExpandBtn) {
+            previewExpandBtn.addEventListener('click', () => this.handlePreviewExpand());
         }
 
         // Floating widget toggle
@@ -486,14 +516,57 @@ class PortfolioNavigator {
     }
 
     /**
-     * Add a message to the chat
+     * Add a message to the chat with enhanced features
      */
     addMessage(sender, text, options = {}) {
+        if (!this.elements.chatMessages) return;
+
+        // Store in history first for analytics
+        const messageObj = {
+            id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+            sender,
+            text,
+            timestamp: Date.now(),
+            options
+        };
+        
+        this.messageHistory.push(messageObj);
+
+        // Add to DOM
+        this.addMessageToDOM(sender, text, options.animate !== false);
+        
+        // Enhanced features
+        if (sender === 'user') {
+            this.trackPopularQuery(text);
+        }
+        
+        // Save conversation state
+        this.saveConversationHistory();
+        
+        // Update conversation starters if needed
+        if (this.messageHistory.length % 5 === 0) {
+            this.showConversationStarters();
+        }
+
+        console.log(`📝 ${sender} message added: ${text.substring(0, 50)}...`);
+        
+        return messageObj;
+    }
+    
+    /**
+     * Add message to DOM (separated for reuse)
+     */
+    addMessageToDOM(sender, text, animate = true) {
         if (!this.elements.chatMessages) return;
 
         const messageElement = document.createElement('div');
         messageElement.className = `message ${sender}-message`;
         messageElement.setAttribute('role', 'article');
+        
+        // Add animation class if needed
+        if (animate) {
+            messageElement.classList.add('message-enter');
+        }
         
         // Create avatar
         const avatarElement = document.createElement('div');
@@ -532,25 +605,25 @@ class PortfolioNavigator {
 
         // Add to chat
         this.elements.chatMessages.appendChild(messageElement);
-
-        // Store in history
-        this.messageHistory.push({
-            sender,
-            text,
-            timestamp: Date.now(),
-            options
-        });
+        
+        // Trigger animation
+        if (animate) {
+            requestAnimationFrame(() => {
+                messageElement.classList.add('message-enter-active');
+            });
+        }
 
         // Scroll to bottom
         this.scrollToBottom();
-
-        console.log(`📝 ${sender} message added: ${text.substring(0, 50)}...`);
     }
 
     /**
      * Process user message with AI integration and portfolio context
      */
     async processUserMessage(message) {
+        const startTime = Date.now();
+        let useAI = false;
+        
         try {
             // Classify intent and prepare context
             const intent = this.classifyIntent(message.toLowerCase());
@@ -561,6 +634,7 @@ class PortfolioNavigator {
                 response = await this.processNavigationIntent(message, intent);
             } else if (this.apiKey) {
                 // Use OpenAI API with portfolio context
+                useAI = true;
                 response = await this.generateAIResponse(message, intent);
             } else {
                 // Fall back to basic response generation
@@ -570,6 +644,10 @@ class PortfolioNavigator {
             // Simulate realistic processing delay
             await this.delay(500 + Math.random() * 1000);
             
+            // Calculate response time
+            const responseTime = Date.now() - startTime;
+            this.trackResponseMetrics(message, responseTime, useAI);
+            
             // Hide typing indicator and show response
             this.hideTypingIndicator();
             this.addMessage('ai', response);
@@ -577,14 +655,18 @@ class PortfolioNavigator {
             // Track successful message processing
             this.trackEvent('message_processed', {
                 intent: intent.type,
-                useAI: !!this.apiKey,
+                useAI: useAI,
                 hasNavigation: intent.type === 'navigation',
+                responseTime,
                 conversationId: this.currentConversationId
             });
             
             console.log('🔄 Message processed:', message);
             
         } catch (error) {
+            const responseTime = Date.now() - startTime;
+            this.trackResponseMetrics(message, responseTime, useAI);
+            
             console.error('❌ Error processing message:', error);
             this.hideTypingIndicator();
             
@@ -1050,6 +1132,393 @@ GUIDELINES:
         console.log('📄 Conversation exported');
     }
 
+    // =====================================
+    // ENHANCED CONVERSATION FEATURES
+    // =====================================
+
+    /**
+     * Load conversation history from localStorage
+     */
+    loadConversationHistory() {
+        if (!this.persistenceEnabled) return;
+        
+        try {
+            const storedConversation = localStorage.getItem(`portfolio_conversation_${this.currentConversationId}`);
+            if (storedConversation) {
+                const conversationData = JSON.parse(storedConversation);
+                
+                // Check if conversation is not expired
+                const now = Date.now();
+                if (now - conversationData.lastActivity < this.sessionTimeout) {
+                    this.messageHistory = conversationData.messages || [];
+                    this.restoreMessagesFromHistory();
+                    
+                    console.log('💾 Conversation history loaded');
+                    return true;
+                }
+            }
+        } catch (error) {
+            console.warn('⚠️ Failed to load conversation history:', error);
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Save conversation history to localStorage
+     */
+    saveConversationHistory() {
+        if (!this.persistenceEnabled) return;
+        
+        try {
+            const conversationData = {
+                conversationId: this.currentConversationId,
+                messages: this.messageHistory.slice(-this.maxStoredMessages),
+                lastActivity: Date.now(),
+                sessionStart: this.analyticsData.sessionStart
+            };
+            
+            localStorage.setItem(
+                `portfolio_conversation_${this.currentConversationId}`,
+                JSON.stringify(conversationData)
+            );
+            
+            // Clean up old conversations
+            this.cleanUpOldConversations();
+            
+        } catch (error) {
+            console.warn('⚠️ Failed to save conversation history:', error);
+        }
+    }
+    
+    /**
+     * Restore messages from history to DOM
+     */
+    restoreMessagesFromHistory() {
+        // Clear existing messages except welcome
+        const welcomeMessage = this.elements.chatMessages.querySelector('.welcome-message');
+        this.elements.chatMessages.innerHTML = '';
+        if (welcomeMessage) {
+            this.elements.chatMessages.appendChild(welcomeMessage);
+        }
+        
+        // Restore messages
+        this.messageHistory.forEach(message => {
+            this.addMessageToDOM(message.sender, message.text, false);
+        });
+        
+        this.scrollToBottom();
+    }
+    
+    /**
+     * Clean up old conversations from localStorage
+     */
+    cleanUpOldConversations() {
+        try {
+            const now = Date.now();
+            const keys = Object.keys(localStorage);
+            
+            keys.forEach(key => {
+                if (key.startsWith('portfolio_conversation_')) {
+                    try {
+                        const data = JSON.parse(localStorage.getItem(key));
+                        if (now - data.lastActivity > this.sessionTimeout) {
+                            localStorage.removeItem(key);
+                        }
+                    } catch {
+                        // Remove corrupted entries
+                        localStorage.removeItem(key);
+                    }
+                }
+            });
+        } catch (error) {
+            console.warn('⚠️ Failed to clean up old conversations:', error);
+        }
+    }
+    
+    /**
+     * Generate dynamic conversation starters
+     */
+    generateConversationStarters() {
+        if (this.conversationStarters) {
+            return this.conversationStarters;
+        }
+        
+        const starters = [
+            {
+                category: "About Jane",
+                questions: [
+                    "What's Jane's design philosophy?",
+                    "Tell me about Jane's background in AI",
+                    "How did Jane get into experience design?"
+                ]
+            },
+            {
+                category: "Current Projects",
+                questions: [
+                    "What is Protogen 101?",
+                    "Show me Jane's latest AI work",
+                    "What projects is Jane working on now?"
+                ]
+            },
+            {
+                category: "Skills & Expertise",
+                questions: [
+                    "What technical skills does Jane have?",
+                    "How experienced is Jane with UX research?",
+                    "What AI technologies does Jane use?"
+                ]
+            },
+            {
+                category: "Collaboration",
+                questions: [
+                    "How can I work with Jane on a project?",
+                    "What type of projects does Jane take on?",
+                    "Is Jane available for consulting?"
+                ]
+            }
+        ];
+        
+        this.conversationStarters = starters;
+        return starters;
+    }
+    
+    /**
+     * Get contextual conversation suggestions
+     */
+    getContextualSuggestions(messageCount = 0) {
+        const allStarters = this.generateConversationStarters();
+        
+        if (messageCount === 0) {
+            // First-time visitor suggestions
+            return [
+                "What kind of design experience does Jane have?",
+                "Tell me about her AI projects",
+                "What are Jane's technical capabilities?",
+                "How can I get in touch with Jane?"
+            ];
+        } else if (messageCount < 3) {
+            // Early conversation suggestions
+            const categories = ['Current Projects', 'Skills & Expertise'];
+            const suggestions = [];
+            categories.forEach(category => {
+                const categoryData = allStarters.find(s => s.category === category);
+                if (categoryData) {
+                    suggestions.push(...categoryData.questions.slice(0, 2));
+                }
+            });
+            return suggestions.slice(0, 4);
+        } else {
+            // Advanced conversation suggestions
+            return [
+                "Can you show me specific project examples?",
+                "What's Jane's approach to user research?",
+                "How does Jane integrate AI into design?",
+                "What collaboration tools does Jane prefer?"
+            ];
+        }
+    }
+    
+    /**
+     * Track popular queries for analytics
+     */
+    trackPopularQuery(query) {
+        const cleanQuery = query.toLowerCase().trim();
+        const count = this.analyticsData.popularQueries.get(cleanQuery) || 0;
+        this.analyticsData.popularQueries.set(cleanQuery, count + 1);
+        
+        // Limit stored queries to prevent memory issues
+        if (this.analyticsData.popularQueries.size > 100) {
+            const entries = Array.from(this.analyticsData.popularQueries.entries());
+            entries.sort((a, b) => b[1] - a[1]); // Sort by count descending
+            this.analyticsData.popularQueries = new Map(entries.slice(0, 50));
+        }
+    }
+    
+    /**
+     * Track navigation patterns
+     */
+    trackNavigationPattern(from, to) {
+        this.analyticsData.navigationPatterns.push({
+            from,
+            to,
+            timestamp: Date.now()
+        });
+        
+        // Limit stored patterns
+        if (this.analyticsData.navigationPatterns.length > 50) {
+            this.analyticsData.navigationPatterns = this.analyticsData.navigationPatterns.slice(-25);
+        }
+    }
+    
+    /**
+     * Track response metrics
+     */
+    trackResponseMetrics(query, responseTime, useAI = false) {
+        this.analyticsData.responseMetrics.push({
+            queryLength: query.length,
+            responseTime,
+            useAI,
+            timestamp: Date.now()
+        });
+        
+        // Limit stored metrics
+        if (this.analyticsData.responseMetrics.length > 100) {
+            this.analyticsData.responseMetrics = this.analyticsData.responseMetrics.slice(-50);
+        }
+    }
+    
+    /**
+     * Get analytics summary
+     */
+    getAnalyticsSummary() {
+        const metrics = this.analyticsData.responseMetrics;
+        const patterns = this.analyticsData.navigationPatterns;
+        const queries = Array.from(this.analyticsData.popularQueries.entries());
+        
+        return {
+            sessionDuration: Date.now() - this.analyticsData.sessionStart,
+            totalMessages: this.messageHistory.length,
+            avgResponseTime: metrics.length ? 
+                metrics.reduce((sum, m) => sum + m.responseTime, 0) / metrics.length : 0,
+            aiUsageRate: metrics.length ? 
+                metrics.filter(m => m.useAI).length / metrics.length : 0,
+            topQueries: queries.sort((a, b) => b[1] - a[1]).slice(0, 5),
+            navigationPatterns: patterns.slice(-10)
+        };
+    }
+    
+    /**
+     * Export enhanced conversation with analytics
+     */
+    exportConversationWithAnalytics() {
+        const basicExport = {
+            conversationId: this.currentConversationId,
+            timestamp: new Date().toISOString(),
+            messages: this.messageHistory.map(msg => ({
+                sender: msg.sender,
+                text: msg.text,
+                timestamp: new Date(msg.timestamp).toISOString()
+            })),
+            metadata: {
+                portfolioData: this.portfolioData.personal,
+                totalMessages: this.messageHistory.length
+            }
+        };
+        
+        const analyticsExport = {
+            ...basicExport,
+            analytics: this.getAnalyticsSummary(),
+            conversationStarters: this.generateConversationStarters(),
+            suggestions: this.getContextualSuggestions(this.messageHistory.length)
+        };
+        
+        const dataStr = JSON.stringify(analyticsExport, null, 2);
+        const dataBlob = new Blob([dataStr], { type: 'application/json' });
+        
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(dataBlob);
+        link.download = `portfolio-chat-analytics-${new Date().toISOString().split('T')[0]}.json`;
+        link.click();
+        
+        // Track event
+        this.trackEvent('analytics_exported', {
+            conversationId: this.currentConversationId,
+            messageCount: this.messageHistory.length,
+            sessionDuration: Date.now() - this.analyticsData.sessionStart
+        });
+        
+        console.log('📊 Conversation with analytics exported');
+    }
+    
+    /**
+     * Show conversation starters in UI
+     */
+    showConversationStarters() {
+        const starters = this.getContextualSuggestions(this.messageHistory.length);
+        
+        if (starters.length === 0) return;
+        
+        // Update suggestion chips in welcome message
+        const suggestionsContainer = document.querySelector('.question-suggestions');
+        if (suggestionsContainer) {
+            suggestionsContainer.innerHTML = starters.map(starter => 
+                `<button class="suggestion-chip" type="button" data-question="${starter}">
+                    ${starter}
+                 </button>`
+            ).join('');
+        }
+        
+        return starters;
+    }
+    
+    /**
+     * Enhanced message addition with persistence
+     */
+    addMessageWithPersistence(sender, text) {
+        const messageObj = {
+            id: `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+            sender,
+            text,
+            timestamp: Date.now()
+        };
+        
+        this.messageHistory.push(messageObj);
+        this.addMessageToDOM(sender, text, true);
+        
+        // Track popular queries
+        if (sender === 'user') {
+            this.trackPopularQuery(text);
+        }
+        
+        // Save to localStorage
+        this.saveConversationHistory();
+        
+        return messageObj;
+    }
+    
+    /**
+     * Enhanced clear with analytics preservation
+     */
+    clearConversationEnhanced() {
+        if (confirm('Clear this conversation? (Analytics data will be preserved)')) {
+            // Preserve analytics before clearing
+            const analytics = this.getAnalyticsSummary();
+            
+            // Clear messages from DOM (keep welcome message)
+            const welcomeMessage = this.elements.chatMessages.querySelector('.welcome-message');
+            const typingIndicator = this.elements.chatMessages.querySelector('.typing-message');
+            
+            this.elements.chatMessages.innerHTML = '';
+            if (welcomeMessage) {
+                this.elements.chatMessages.appendChild(welcomeMessage);
+            }
+            if (typingIndicator) {
+                this.elements.chatMessages.appendChild(typingIndicator);
+            }
+            
+            // Clear history and generate new conversation ID
+            this.messageHistory = [];
+            const oldConversationId = this.currentConversationId;
+            this.currentConversationId = this.generateConversationId();
+            
+            // Clean up localStorage
+            localStorage.removeItem(`portfolio_conversation_${oldConversationId}`);
+            
+            // Reset conversation starters
+            this.showConversationStarters();
+            
+            // Track event with preserved analytics
+            this.trackEvent('conversation_cleared_enhanced', {
+                oldConversationId,
+                newConversationId: this.currentConversationId,
+                preservedAnalytics: analytics
+            });
+            
+            console.log('🗑️ Conversation cleared (analytics preserved)');
+        }
+    }
+
     /**
      * Show help modal
      */
@@ -1080,22 +1549,488 @@ GUIDELINES:
     }
 
     /**
-     * Show portfolio preview
+     * Show enhanced portfolio preview with dynamic content
      */
-    showPortfolioPreview(content) {
-        if (this.elements.portfolioPreview) {
-            const previewContent = this.elements.portfolioPreview.querySelector('.preview-content');
-            if (previewContent) {
-                previewContent.innerHTML = content;
-            }
-            
-            this.elements.portfolioPreview.setAttribute('aria-hidden', 'false');
-            
-            // Track event
-            this.trackEvent('portfolio_preview_shown', {
-                conversationId: this.currentConversationId
-            });
+    showPortfolioPreview(linkData) {
+        if (!this.elements.portfolioPreview || !linkData) return;
+        
+        const previewContent = this.elements.portfolioPreview.querySelector('#preview-content');
+        const previewTitle = this.elements.portfolioPreview.querySelector('#preview-title');
+        
+        if (!previewContent || !previewTitle) return;
+        
+        // Update preview title
+        previewTitle.textContent = linkData.title;
+        
+        // Generate dynamic content based on type
+        let contentHTML = '';
+        
+        switch (linkData.type) {
+            case 'project':
+                contentHTML = this.generateProjectCard(linkData.data);
+                break;
+            case 'projects':
+                contentHTML = this.generateProjectsGrid(linkData.data);
+                break;
+            case 'skills':
+                contentHTML = linkData.data.skills ? 
+                    this.generateSkillsCategoryCard(linkData.data) : 
+                    this.generateSkillsOverview(linkData.data);
+                break;
+            case 'about':
+                contentHTML = this.generateAboutCard(linkData.data);
+                break;
+            case 'experience':
+                contentHTML = this.generateExperienceCards(this.portfolioData.experience);
+                break;
+            case 'contact':
+                contentHTML = this.generateContactCard(linkData.data);
+                break;
+            default:
+                contentHTML = this.generateGenericContent(linkData);
         }
+        
+        // Apply smooth transition
+        previewContent.style.opacity = '0';
+        setTimeout(() => {
+            previewContent.innerHTML = contentHTML;
+            previewContent.style.opacity = '1';
+            
+            // Set up event listeners for interactive elements
+            this.setupPreviewInteractions();
+            
+            // Generate and show related suggestions
+            this.showRelatedSuggestions(linkData);
+            
+        }, 150);
+        
+        // Show preview panel
+        this.elements.portfolioPreview.setAttribute('aria-hidden', 'false');
+        
+        // Update navigation chips
+        this.updateNavigationChips(linkData.type);
+        
+        // Track event
+        this.trackEvent('portfolio_preview_shown', {
+            type: linkData.type,
+            title: linkData.title,
+            conversationId: this.currentConversationId
+        });
+    }
+    
+    /**
+     * Generate project card HTML
+     */
+    generateProjectCard(project) {
+        const statusClass = project.status.toLowerCase().replace(' ', '-');
+        const techList = project.technologies.slice(0, 4);
+        const featureList = project.features?.slice(0, 3) || [];
+        
+        return `
+            <div class="preview-card">
+                <div class="preview-card-header">
+                    <div class="preview-card-title">${project.name}</div>
+                    <div class="preview-card-subtitle">${project.type}</div>
+                </div>
+                <div class="preview-card-content">
+                    <div class="project-status ${statusClass}">${project.status}</div>
+                    <div class="preview-card-text">${project.description}</div>
+                    
+                    <h5 style="font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">Technologies:</h5>
+                    <div class="preview-card-tags">
+                        ${techList.map(tech => `<span class="preview-tag">${tech}</span>`).join('')}
+                    </div>
+                    
+                    ${featureList.length ? `
+                        <h5 style="font-size: 13px; font-weight: 600; color: var(--text-primary); margin: 12px 0 8px 0;">Key Features:</h5>
+                        <ul style="font-size: 13px; color: var(--text-secondary); padding-left: 16px;">
+                            ${featureList.map(feature => `<li>${feature}</li>`).join('')}
+                        </ul>
+                    ` : ''}
+                </div>
+                <div class="preview-card-actions">
+                    <button class="preview-action" data-action="view-project" data-url="${project.url}">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                        View Details
+                    </button>
+                    <button class="preview-action" data-action="ask-about" data-query="Tell me more about ${project.name}">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        Ask About
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+    
+    /**
+     * Generate projects grid HTML
+     */
+    generateProjectsGrid(projects) {
+        return projects.map(project => this.generateProjectCard(project)).join('');
+    }
+    
+    /**
+     * Generate skills category card HTML
+     */
+    generateSkillsCategoryCard(skillData) {
+        return `
+            <div class="preview-card">
+                <div class="preview-card-header">
+                    <div class="preview-card-title">${skillData.title}</div>
+                    <div class="preview-card-subtitle">${skillData.skills.length} skills</div>
+                </div>
+                <div class="preview-card-content">
+                    ${skillData.skills.map(skill => `
+                        <div style="margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                <span style="font-weight: 500; color: var(--text-primary); font-size: 14px;">${skill.name}</span>
+                                <span style="font-size: 11px; color: var(--text-secondary); text-transform: uppercase;">${skill.level}</span>
+                            </div>
+                            <div class="skill-level-bar">
+                                <div class="skill-level-fill" style="width: ${this.getSkillLevelWidth(skill.level)}%;"></div>
+                            </div>
+                            <p style="font-size: 12px; color: var(--text-secondary); margin-top: 4px; line-height: 1.4;">${skill.description}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+    
+    /**
+     * Generate skills overview HTML
+     */
+    generateSkillsOverview(skillsData) {
+        return Object.entries(skillsData).map(([category, data]) => `
+            <div class="preview-card">
+                <div class="preview-card-header">
+                    <div class="preview-card-title">${data.title}</div>
+                    <div class="preview-card-subtitle">${data.skills.length} skills</div>
+                </div>
+                <div class="preview-card-content">
+                    <div class="preview-card-tags">
+                        ${data.skills.slice(0, 6).map(skill => `<span class="preview-tag">${skill.name}</span>`).join('')}
+                    </div>
+                </div>
+                <div class="preview-card-actions">
+                    <button class="preview-action" data-action="show-category" data-category="${category}">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 18l6-6-6-6"></path>
+                        </svg>
+                        View All
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    /**
+     * Generate about card HTML
+     */
+    generateAboutCard(personalData) {
+        return `
+            <div class="preview-card">
+                <div class="preview-card-header">
+                    <div class="preview-card-title">${personalData.name}</div>
+                    <div class="preview-card-subtitle">${personalData.title}</div>
+                </div>
+                <div class="preview-card-content">
+                    <div style="font-style: italic; color: var(--primary-color); margin-bottom: 12px; font-size: 14px;">
+                        "${personalData.tagline}"
+                    </div>
+                    <div class="preview-card-text">${personalData.bio}</div>
+                    
+                    <h5 style="font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">Expertise:</h5>
+                    <div class="preview-card-tags">
+                        ${personalData.expertise.map(exp => `<span class="preview-tag">${exp}</span>`).join('')}
+                    </div>
+                    
+                    <div style="margin-top: 12px; padding: 12px; background: rgba(0,0,0,0.02); border-radius: 8px;">
+                        <div style="font-size: 13px; font-weight: 500; color: var(--text-primary);">Availability</div>
+                        <div style="font-size: 12px; color: var(--text-secondary);">${personalData.availability}</div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+    
+    /**
+     * Generate experience cards HTML
+     */
+    generateExperienceCards(experienceData) {
+        return experienceData.map(exp => `
+            <div class="preview-card">
+                <div class="preview-card-header">
+                    <div class="preview-card-title">${exp.title}</div>
+                    <div class="preview-card-subtitle">${exp.company} • ${exp.period}</div>
+                </div>
+                <div class="preview-card-content">
+                    <div class="preview-card-text">${exp.description}</div>
+                    
+                    <h5 style="font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px;">Key Achievements:</h5>
+                    <ul style="font-size: 13px; color: var(--text-secondary); padding-left: 16px;">
+                        ${exp.achievements.map(achievement => `<li style="margin-bottom: 4px;">${achievement}</li>`).join('')}
+                    </ul>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    /**
+     * Generate contact card HTML
+     */
+    generateContactCard(contactData) {
+        return `
+            <div class="preview-card">
+                <div class="preview-card-header">
+                    <div class="preview-card-title">Get In Touch</div>
+                    <div class="preview-card-subtitle">Let's collaborate</div>
+                </div>
+                <div class="preview-card-content">
+                    <div class="preview-card-text">Ready to work together on your next project? I'd love to hear from you!</div>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 16px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                            <span style="font-size: 13px; color: var(--text-secondary);">${contactData.email}</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                                <rect x="2" y="9" width="4" height="12"></rect>
+                                <circle cx="4" cy="4" r="2"></circle>
+                            </svg>
+                            <span style="font-size: 13px; color: var(--text-secondary);">${contactData.linkedin}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="preview-card-actions">
+                    <button class="preview-action" data-action="contact-form">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                            <polyline points="22,6 12,13 2,6"></polyline>
+                        </svg>
+                        Contact Form
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+    
+    /**
+     * Generate generic content HTML
+     */
+    generateGenericContent(linkData) {
+        return `
+            <div class="preview-card">
+                <div class="preview-card-header">
+                    <div class="preview-card-title">${linkData.title}</div>
+                </div>
+                <div class="preview-card-content">
+                    <div class="preview-card-text">Content preview will be available soon.</div>
+                </div>
+            </div>
+        `;
+    }
+    
+    /**
+     * Get skill level width percentage
+     */
+    getSkillLevelWidth(level) {
+        switch (level.toLowerCase()) {
+            case 'expert': return 95;
+            case 'advanced': return 80;
+            case 'intermediate': return 65;
+            case 'beginner': return 35;
+            default: return 50;
+        }
+    }
+    
+    /**
+     * Setup preview interactions
+     */
+    setupPreviewInteractions() {
+        const previewActions = this.elements.portfolioPreview.querySelectorAll('.preview-action');
+        
+        previewActions.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                const action = button.dataset.action;
+                
+                switch (action) {
+                    case 'view-project':
+                        this.handleViewProject(button.dataset.url);
+                        break;
+                    case 'ask-about':
+                        this.handleAskAbout(button.dataset.query);
+                        break;
+                    case 'show-category':
+                        this.handleShowCategory(button.dataset.category);
+                        break;
+                    case 'contact-form':
+                        this.handleContactForm();
+                        break;
+                }
+            });
+        });
+        
+        // Navigation chips
+        const navChips = this.elements.portfolioPreview.querySelectorAll('.nav-chip');
+        navChips.forEach(chip => {
+            chip.addEventListener('click', (e) => {
+                e.preventDefault();
+                const section = chip.dataset.section;
+                this.handleQuickNavigation(section);
+            });
+        });
+    }
+    
+    /**
+     * Handle preview actions
+     */
+    handleViewProject(url) {
+        if (url && url !== '#') {
+            window.open(url, '_blank');
+        }
+        this.trackEvent('preview_action_clicked', { action: 'view_project', url });
+    }
+    
+    handleAskAbout(query) {
+        if (this.elements.messageInput) {
+            this.elements.messageInput.value = query;
+            this.updateCharacterCount();
+            this.updateSendButtonState();
+            this.elements.messageInput.focus();
+        }
+        this.trackEvent('preview_action_clicked', { action: 'ask_about', query });
+    }
+    
+    handleShowCategory(category) {
+        const linkData = this.generateDeepLinkData('skills', category);
+        if (linkData) {
+            this.showPortfolioPreview(linkData);
+        }
+        this.trackEvent('preview_action_clicked', { action: 'show_category', category });
+    }
+    
+    handleContactForm() {
+        // Navigate to contact section or show contact info
+        window.open('#contact', '_blank');
+        this.trackEvent('preview_action_clicked', { action: 'contact_form' });
+    }
+    
+    handleQuickNavigation(section) {
+        const linkData = this.generateDeepLinkData(section, null);
+        if (linkData) {
+            this.showPortfolioPreview(linkData);
+        }
+        this.trackEvent('quick_navigation', { section });
+    }
+    
+    /**
+     * Update navigation chips active state
+     */
+    updateNavigationChips(activeType) {
+        const navChips = this.elements.portfolioPreview.querySelectorAll('.nav-chip');
+        navChips.forEach(chip => {
+            chip.classList.remove('active');
+            if (chip.dataset.section === activeType || 
+                (activeType === 'projects' && chip.dataset.section === 'projects') ||
+                (activeType === 'project' && chip.dataset.section === 'projects')) {
+                chip.classList.add('active');
+            }
+        });
+    }
+    
+    /**
+     * Show related suggestions
+     */
+    showRelatedSuggestions(linkData) {
+        const relatedSection = this.elements.portfolioPreview.querySelector('#related-suggestions');
+        if (!relatedSection) return;
+        
+        const suggestions = this.generateRelatedSuggestions(linkData);
+        
+        if (suggestions.length > 0) {
+            const suggestionItems = relatedSection.querySelector('.suggestion-items');
+            suggestionItems.innerHTML = suggestions.map(suggestion => `
+                <button class="suggestion-item" data-query="${suggestion.query}">
+                    <svg class="suggestion-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        ${suggestion.icon}
+                    </svg>
+                    ${suggestion.text}
+                </button>
+            `).join('');
+            
+            // Add click handlers
+            suggestionItems.querySelectorAll('.suggestion-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    this.handleAskAbout(item.dataset.query);
+                });
+            });
+            
+            relatedSection.setAttribute('aria-hidden', 'false');
+        } else {
+            relatedSection.setAttribute('aria-hidden', 'true');
+        }
+    }
+    
+    /**
+     * Generate related suggestions based on content
+     */
+    generateRelatedSuggestions(linkData) {
+        const suggestions = [];
+        
+        switch (linkData.type) {
+            case 'project':
+                suggestions.push(
+                    { text: 'See more projects', query: 'Show me more of Jane\'s projects', icon: '<rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>' },
+                    { text: 'Ask about technologies', query: `What technologies does Jane use for ${linkData.data.name}?`, icon: '<polyline points="16,18 22,12 16,6"></polyline>' },
+                    { text: 'Learn about skills', query: 'What skills did Jane develop from this project?', icon: '<polygon points="12,2 15.09,8.26 22,9 17,14 18.18,21 12,17.77 5.82,21 7,14 2,9 8.91,8.26"></polygon>' }
+                );
+                break;
+            case 'skills':
+                suggestions.push(
+                    { text: 'See projects using this skill', query: 'What projects showcase these skills?', icon: '<rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>' },
+                    { text: 'Learn about experience', query: 'How did Jane develop these skills?', icon: '<rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>' },
+                    { text: 'Ask about learning', query: 'How does Jane stay current with these technologies?', icon: '<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>' }
+                );
+                break;
+            case 'about':
+                suggestions.push(
+                    { text: 'See work examples', query: 'Show me examples of Jane\'s work', icon: '<rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>' },
+                    { text: 'Learn about expertise', query: 'Tell me more about Jane\'s AI expertise', icon: '<polygon points="12,2 15.09,8.26 22,9 17,14 18.18,21 12,17.77 5.82,21 7,14 2,9 8.91,8.26"></polygon>' },
+                    { text: 'Discuss collaboration', query: 'How can I work with Jane on a project?', icon: '<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>' }
+                );
+                break;
+            default:
+                suggestions.push(
+                    { text: 'Explore projects', query: 'What are Jane\'s most interesting projects?', icon: '<rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>' },
+                    { text: 'Learn about skills', query: 'What are Jane\'s core technical skills?', icon: '<polygon points="12,2 15.09,8.26 22,9 17,14 18.18,21 12,17.77 5.82,21 7,14 2,9 8.91,8.26"></polygon>' }
+                );
+        }
+        
+        return suggestions.slice(0, 3);
+    }
+    
+    /**
+     * Handle preview expand button
+     */
+    handlePreviewExpand() {
+        // Open portfolio in new tab/window
+        window.open('index.html', '_blank');
+        
+        this.trackEvent('preview_expanded', {
+            conversationId: this.currentConversationId
+        });
     }
 
     /**

@@ -124,15 +124,82 @@
                 <div id="portfolio-preview" class="portfolio-preview" role="region" aria-labelledby="preview-title" aria-hidden="true">
                     <div class="preview-header">
                         <h3 id="preview-title">Portfolio Preview</h3>
-                        <button class="preview-close" type="button" aria-label="Close portfolio preview">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <line x1="18" y1="6" x2="6" y2="18"></line>
-                                <line x1="6" y1="6" x2="18" y2="18"></line>
-                            </svg>
-                        </button>
+                        <div class="preview-controls">
+                            <button class="preview-expand" type="button" aria-label="View full content" title="Open in new tab">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="15,3 21,3 21,9"></polyline>
+                                    <polyline points="9,21 3,21 3,15"></polyline>
+                                    <line x1="21" y1="3" x2="14" y2="10"></line>
+                                    <line x1="3" y1="21" x2="10" y2="14"></line>
+                                </svg>
+                            </button>
+                            <button class="preview-close" type="button" aria-label="Close portfolio preview">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
+                    
                     <div id="preview-content" class="preview-content">
                         <!-- Dynamic portfolio content will be inserted here -->
+                        <div class="preview-placeholder">
+                            <svg class="preview-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21,15 16,10 5,21"></polyline>
+                            </svg>
+                            <p>Portfolio content will appear here when you navigate to a section</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Quick Navigation Buttons -->
+                    <div class="preview-navigation" role="toolbar" aria-label="Quick portfolio navigation">
+                        <button class="nav-chip" type="button" data-section="about" aria-label="Navigate to About section">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            About
+                        </button>
+                        <button class="nav-chip" type="button" data-section="projects" aria-label="Navigate to Projects section">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                            </svg>
+                            Projects
+                        </button>
+                        <button class="nav-chip" type="button" data-section="skills" aria-label="Navigate to Skills section">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="12,2 15.09,8.26 22,9 17,14 18.18,21 12,17.77 5.82,21 7,14 2,9 8.91,8.26"></polygon>
+                            </svg>
+                            Skills
+                        </button>
+                        <button class="nav-chip" type="button" data-section="experience" aria-label="Navigate to Experience section">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                <line x1="8" y1="21" x2="16" y2="21"></line>
+                                <line x1="12" y1="17" x2="12" y2="21"></line>
+                            </svg>
+                            Experience
+                        </button>
+                        <button class="nav-chip" type="button" data-section="contact" aria-label="Navigate to Contact section">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                            Contact
+                        </button>
+                    </div>
+                    
+                    <!-- Related Content Suggestions -->
+                    <div id="related-suggestions" class="related-suggestions" role="region" aria-label="Related content suggestions" aria-hidden="true">
+                        <h4>You might also like:</h4>
+                        <div class="suggestion-items">
+                            <!-- Dynamic suggestions will be inserted here -->
+                        </div>
                     </div>
                 </div>
 
