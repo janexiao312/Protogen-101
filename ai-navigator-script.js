@@ -14,30 +14,155 @@ class PortfolioNavigator {
         this.currentConversationId = this.generateConversationId();
         this.isInitialized = false;
         
-        // Portfolio knowledge base (will be expanded in Task 4)
+        // Portfolio knowledge base - Comprehensive structured data about Jane's work and skills
         this.portfolioData = {
             personal: {
-                name: "Jane",
-                title: "Experience Designer",
+                name: "Jane Xiao",
+                title: "Experience Designer & AI Integration Specialist",
                 location: "Available for remote collaboration",
-                expertise: ["UX/UI Design", "AI Integration", "Frontend Development", "User Research"],
-                bio: "Experience Designer with a passion for integrating AI technology into human-centered design solutions."
+                tagline: "Bridging human-centered design with artificial intelligence",
+                expertise: ["UX/UI Design", "AI Integration", "Frontend Development", "User Research", "Design Systems"],
+                bio: "Experience Designer with expertise in integrating AI technology into human-centered design solutions. Passionate about creating intuitive interfaces that leverage machine learning capabilities while maintaining exceptional user experiences.",
+                contact: {
+                    email: "Available through contact form",
+                    linkedin: "Connect via portfolio",
+                    portfolio: "Browse projects below"
+                },
+                availability: "Open to new opportunities and collaborations"
             },
+            
             projects: [
                 {
                     id: "protogen-101",
                     name: "Protogen 101",
                     type: "AI Integration Project",
-                    description: "AI-powered portfolio navigator demonstrating practical LLM integration in design workflows",
-                    technologies: ["OpenAI API", "JavaScript", "CSS", "HTML"],
+                    description: "AI-powered portfolio navigator demonstrating practical LLM integration in design workflows. Features natural language portfolio exploration, intelligent content recommendations, and seamless user interaction.",
+                    technologies: ["OpenAI API", "JavaScript ES6+", "CSS3", "HTML5", "Accessibility Standards"],
+                    features: ["Natural Language Processing", "Portfolio Content Navigation", "Responsive Chat Interface", "Accessibility Compliance"],
+                    challenges: ["API Integration", "Context Management", "Performance Optimization", "User Experience Design"],
                     status: "In Development",
-                    url: "#protogen-101"
+                    url: "#protogen-101",
+                    category: "frontend",
+                    tags: ["AI", "Chat Interface", "Portfolio", "JavaScript"]
+                },
+                {
+                    id: "design-system-ai",
+                    name: "AI-Enhanced Design System",
+                    type: "Design System Project",
+                    description: "Comprehensive design system with AI-powered component suggestions and automated accessibility checks",
+                    technologies: ["Figma", "Design Tokens", "CSS Variables", "JavaScript", "AI APIs"],
+                    features: ["Component Library", "Automated A11y Testing", "AI Design Suggestions", "Token Management"],
+                    status: "Concept",
+                    url: "#design-system",
+                    category: "design",
+                    tags: ["Design System", "AI", "Accessibility", "Components"]
+                },
+                {
+                    id: "user-research-platform",
+                    name: "User Research Platform",
+                    type: "UX Research Tool",
+                    description: "Platform for conducting and analyzing user research with AI-assisted insights and pattern recognition",
+                    technologies: ["React", "Node.js", "Machine Learning APIs", "Data Visualization"],
+                    features: ["Interview Analysis", "Pattern Recognition", "Insight Generation", "Report Automation"],
+                    status: "Concept",
+                    url: "#research-platform",
+                    category: "research",
+                    tags: ["UX Research", "AI Analysis", "Data Visualization", "Platform"]
                 }
             ],
+            
             skills: {
-                design: ["User Experience Design", "User Interface Design", "User Research", "Prototyping", "Design Systems"],
-                technical: ["JavaScript", "CSS3", "HTML5", "API Integration", "Responsive Design"],
-                ai: ["LLM Integration", "Prompt Engineering", "AI-Human Interaction Design", "Conversational UI"]
+                design: {
+                    title: "Design & Research",
+                    skills: [
+                        { name: "User Experience Design", level: "Expert", description: "End-to-end UX design process from research to implementation" },
+                        { name: "User Interface Design", level: "Expert", description: "Creating intuitive and accessible digital interfaces" },
+                        { name: "User Research", level: "Advanced", description: "Qualitative and quantitative research methods" },
+                        { name: "Prototyping", level: "Advanced", description: "Rapid prototyping and iterative design" },
+                        { name: "Design Systems", level: "Advanced", description: "Scalable design system creation and maintenance" },
+                        { name: "Information Architecture", level: "Advanced", description: "Content organization and navigation design" }
+                    ]
+                },
+                technical: {
+                    title: "Technical Skills",
+                    skills: [
+                        { name: "JavaScript ES6+", level: "Advanced", description: "Modern JavaScript development and API integration" },
+                        { name: "CSS3 & Sass", level: "Advanced", description: "Advanced styling, animations, and responsive design" },
+                        { name: "HTML5", level: "Expert", description: "Semantic markup and accessibility standards" },
+                        { name: "React", level: "Intermediate", description: "Component-based frontend development" },
+                        { name: "API Integration", level: "Advanced", description: "RESTful APIs and third-party service integration" },
+                        { name: "Responsive Design", level: "Expert", description: "Mobile-first and cross-device compatibility" }
+                    ]
+                },
+                ai: {
+                    title: "AI & Machine Learning",
+                    skills: [
+                        { name: "LLM Integration", level: "Advanced", description: "OpenAI API and language model implementation" },
+                        { name: "Prompt Engineering", level: "Advanced", description: "Optimizing AI prompts for specific use cases" },
+                        { name: "AI-Human Interaction Design", level: "Advanced", description: "Designing intuitive AI-powered experiences" },
+                        { name: "Conversational UI", level: "Advanced", description: "Chat interfaces and voice interaction design" },
+                        { name: "Machine Learning Basics", level: "Intermediate", description: "Understanding ML concepts for design applications" }
+                    ]
+                }
+            },
+            
+            experience: [
+                {
+                    title: "Senior UX Designer",
+                    company: "Tech Innovation Lab",
+                    period: "2022 - Present",
+                    description: "Leading AI integration projects and designing human-centered solutions for complex technical challenges.",
+                    achievements: [
+                        "Designed AI-powered user interfaces improving task completion by 40%",
+                        "Led cross-functional teams in implementing accessibility standards",
+                        "Developed design system adopted across multiple product lines"
+                    ]
+                },
+                {
+                    title: "UX/UI Designer",
+                    company: "Digital Design Studio",
+                    period: "2020 - 2022", 
+                    description: "Focused on user research, interface design, and frontend implementation for web applications.",
+                    achievements: [
+                        "Conducted user research informing product strategy decisions",
+                        "Designed responsive interfaces for 15+ client projects",
+                        "Mentored junior designers in design thinking methodologies"
+                    ]
+                }
+            ],
+            
+            // Portfolio section mapping for navigation
+            sections: {
+                about: {
+                    title: "About",
+                    description: "Learn about Jane's background, expertise, and design philosophy",
+                    keywords: ["about", "bio", "background", "experience", "philosophy", "approach"],
+                    content: "personal"
+                },
+                projects: {
+                    title: "Projects",
+                    description: "Explore Jane's portfolio of design and development projects",
+                    keywords: ["projects", "work", "portfolio", "cases", "examples", "protogen"],
+                    content: "projects"
+                },
+                skills: {
+                    title: "Skills",
+                    description: "Technical and design capabilities across AI, UX, and development",
+                    keywords: ["skills", "capabilities", "expertise", "technologies", "tools"],
+                    content: "skills"
+                },
+                experience: {
+                    title: "Experience",
+                    description: "Professional background and career highlights",
+                    keywords: ["experience", "work history", "career", "jobs", "roles"],
+                    content: "experience"
+                },
+                contact: {
+                    title: "Contact",
+                    description: "Get in touch for collaboration opportunities",
+                    keywords: ["contact", "email", "hire", "collaborate", "connect", "reach"],
+                    content: "contact"
+                }
             }
         };
         
@@ -204,15 +329,48 @@ class PortfolioNavigator {
     }
 
     /**
-     * Set up API key management
+     * Set up API key management with enhanced validation
      */
     setupAPIKey() {
         // Check for stored API key
         const storedApiKey = localStorage.getItem('portfolio_openai_key');
-        if (storedApiKey) {
+        if (storedApiKey && this.validateAPIKey(storedApiKey)) {
             this.apiKey = storedApiKey;
             console.log('🔑 API key loaded from storage');
+        } else {
+            console.log('🔓 No valid API key found - using basic responses');
         }
+    }
+    
+    /**
+     * Validate OpenAI API key format
+     */
+    validateAPIKey(key) {
+        return key && typeof key === 'string' && key.startsWith('sk-') && key.length > 20;
+    }
+    
+    /**
+     * Set API key and save to localStorage
+     */
+    setAPIKey(key) {
+        if (this.validateAPIKey(key)) {
+            this.apiKey = key;
+            localStorage.setItem('portfolio_openai_key', key);
+            console.log('✅ API key set successfully');
+            return true;
+        } else {
+            console.error('❌ Invalid API key format');
+            return false;
+        }
+    }
+    
+    /**
+     * Clear stored API key
+     */
+    clearAPIKey() {
+        this.apiKey = null;
+        localStorage.removeItem('portfolio_openai_key');
+        console.log('🗑️ API key cleared');
     }
 
     /**
@@ -390,51 +548,381 @@ class PortfolioNavigator {
     }
 
     /**
-     * Process user message (placeholder for AI integration)
+     * Process user message with AI integration and portfolio context
      */
     async processUserMessage(message) {
-        // Simulate processing delay
-        await this.delay(1000 + Math.random() * 1000);
+        try {
+            // Classify intent and prepare context
+            const intent = this.classifyIntent(message.toLowerCase());
+            let response;
+            
+            // Check for navigation intents first
+            if (intent.type === 'navigation' || this.isNavigationRequest(message)) {
+                response = await this.processNavigationIntent(message, intent);
+            } else if (this.apiKey) {
+                // Use OpenAI API with portfolio context
+                response = await this.generateAIResponse(message, intent);
+            } else {
+                // Fall back to basic response generation
+                response = this.generateBasicResponse(message);
+            }
+            
+            // Simulate realistic processing delay
+            await this.delay(500 + Math.random() * 1000);
+            
+            // Hide typing indicator and show response
+            this.hideTypingIndicator();
+            this.addMessage('ai', response);
+            
+            // Track successful message processing
+            this.trackEvent('message_processed', {
+                intent: intent.type,
+                useAI: !!this.apiKey,
+                hasNavigation: intent.type === 'navigation',
+                conversationId: this.currentConversationId
+            });
+            
+            console.log('🔄 Message processed:', message);
+            
+        } catch (error) {
+            console.error('❌ Error processing message:', error);
+            this.hideTypingIndicator();
+            
+            // Use enhanced error handling
+            this.handleAPIError(error);
+            
+            // Fallback to basic response if not API-related error
+            if (!error.message.includes('API') && !error.message.includes('rate limit')) {
+                const fallbackResponse = this.generateBasicResponse(message);
+                this.addMessage('ai', fallbackResponse);
+            }
+        }
+    }
+    
+    /**
+     * Check if message is a navigation request
+     */
+    isNavigationRequest(message) {
+        const navigationKeywords = [
+            'show me', 'take me', 'go to', 'navigate', 'visit',
+            'preview', 'look at', 'see', 'view', 'display',
+            'find', 'search', 'suggest', 'recommend'
+        ];
         
-        // Hide typing indicator
-        this.hideTypingIndicator();
+        const lowerMessage = message.toLowerCase();
+        return navigationKeywords.some(keyword => lowerMessage.includes(keyword));
+    }
+    
+    /**
+     * Generate AI-powered response using OpenAI API
+     */
+    async generateAIResponse(message, intent) {
+        if (!this.apiKey) {
+            throw new Error('No API key available');
+        }
         
-        // Simple response for now (will be enhanced with AI in later tasks)
-        const response = this.generateBasicResponse(message);
-        this.addMessage('ai', response);
+        try {
+            const systemPrompt = this.buildSystemPrompt(intent);
+            const contextualPrompt = this.buildContextualPrompt(message, intent);
+            
+            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${this.apiKey}`
+                },
+                body: JSON.stringify({
+                    model: 'gpt-3.5-turbo',
+                    messages: [
+                        { role: 'system', content: systemPrompt },
+                        { role: 'user', content: contextualPrompt }
+                    ],
+                    max_tokens: 300,
+                    temperature: 0.7,
+                    presence_penalty: 0.1,
+                    frequency_penalty: 0.1
+                })
+            });
+            
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(`API Error: ${errorData.error?.message || 'Unknown error'}`);
+            }
+            
+            const data = await response.json();
+            const aiResponse = data.choices[0]?.message?.content?.trim();
+            
+            if (!aiResponse) {
+                throw new Error('Empty response from API');
+            }
+            
+            return aiResponse;
+            
+        } catch (error) {
+            console.error('🚨 OpenAI API Error:', error);
+            
+            // Handle specific error types
+            if (error.message.includes('API key')) {
+                this.clearAPIKey();
+                throw new Error('Invalid API key. Please check your OpenAI API key.');
+            }
+            
+            if (error.message.includes('rate limit')) {
+                throw new Error('Rate limit exceeded. Please try again in a moment.');
+            }
+            
+            throw new Error('AI service temporarily unavailable. Using basic response.');
+        }
+    }
+    
+    /**
+     * Build system prompt with portfolio context
+     */
+    buildSystemPrompt(intent) {
+        const personalInfo = this.portfolioData.personal;
+        const projects = this.portfolioData.projects;
+        const skills = Object.entries(this.portfolioData.skills);
         
-        console.log('🔄 Message processed:', message);
+        return `You are an AI assistant helping visitors learn about ${personalInfo.name}, a ${personalInfo.title}.
+
+PERSONA: Be helpful, professional, and enthusiastic about ${personalInfo.name}'s work. Keep responses conversational and engaging while being informative.
+
+CORE INFORMATION:
+- Name: ${personalInfo.name}
+- Title: ${personalInfo.title}
+- Bio: ${personalInfo.bio}
+- Expertise: ${personalInfo.expertise.join(', ')}
+- Availability: ${personalInfo.availability}
+
+KEY PROJECTS:
+${projects.map(p => `- ${p.name}: ${p.description}`).join('\n')}
+
+SKILLS OVERVIEW:
+${skills.map(([cat, data]) => `- ${data.title}: ${data.skills.slice(0, 3).map(s => s.name).join(', ')}`).join('\n')}
+
+GUIDELINES:
+- Keep responses under 250 words
+- Be specific about ${personalInfo.name}'s capabilities
+- Mention relevant projects when appropriate
+- For contact requests, direct to portfolio contact form
+- For navigation requests, reference specific portfolio sections
+- Don't make up information not provided in the context`;
+    }
+    
+    /**
+     * Build contextual prompt based on user intent
+     */
+    buildContextualPrompt(message, intent) {
+        let contextPrompt = `User question: "${message}"\n\n`;
+        
+        // Add intent-specific context
+        switch (intent.type) {
+            case 'projects':
+                contextPrompt += `Context: User is asking about projects. Relevant projects:\n`;
+                contextPrompt += this.portfolioData.projects.map(p => 
+                    `- ${p.name} (${p.status}): ${p.description}`
+                ).join('\n');
+                break;
+                
+            case 'skills':
+                contextPrompt += `Context: User is asking about skills. Detailed skills:\n`;
+                Object.entries(this.portfolioData.skills).forEach(([cat, data]) => {
+                    contextPrompt += `${data.title}:\n`;
+                    contextPrompt += data.skills.map(s => `  - ${s.name} (${s.level}): ${s.description}`).join('\n') + '\n';
+                });
+                break;
+                
+            case 'experience':
+                contextPrompt += `Context: User is asking about experience. Work history:\n`;
+                contextPrompt += this.portfolioData.experience.map(exp =>
+                    `- ${exp.title} at ${exp.company} (${exp.period}): ${exp.description}`
+                ).join('\n');
+                break;
+                
+            case 'about':
+                contextPrompt += `Context: User wants to know about Jane personally. Include her design philosophy and approach.`;
+                break;
+                
+            case 'contact':
+                contextPrompt += `Context: User wants to contact Jane. She is ${this.portfolioData.personal.availability.toLowerCase()}`;
+                break;
+        }
+        
+        return contextPrompt;
     }
 
     /**
-     * Generate basic response (temporary, before AI integration)
+     * Generate intelligent response using portfolio knowledge system
      */
     generateBasicResponse(message) {
         const lowerMessage = message.toLowerCase();
+        const intent = this.classifyIntent(lowerMessage);
         
-        // Simple keyword-based responses
-        if (lowerMessage.includes('experience') || lowerMessage.includes('background')) {
-            return "Jane is an Experience Designer with expertise in UX/UI design, user research, and AI integration. She combines design thinking with technical implementation to create human-centered digital experiences.";
+        // Route to appropriate response handler
+        switch (intent.type) {
+            case 'about':
+                return this.generateAboutResponse(intent);
+            case 'skills':
+                return this.generateSkillsResponse(intent);
+            case 'projects':
+                return this.generateProjectsResponse(intent);
+            case 'experience':
+                return this.generateExperienceResponse(intent);
+            case 'contact':
+                return this.generateContactResponse(intent);
+            case 'ai':
+                return this.generateAIResponse(intent);
+            case 'navigation':
+                return this.generateNavigationResponse(intent);
+            default:
+                return this.generateDefaultResponse();
+        }
+    }
+    
+    /**
+     * Classify user intent from message
+     */
+    classifyIntent(message) {
+        const keywords = {
+            about: ['about', 'bio', 'background', 'who', 'jane', 'philosophy', 'approach'],
+            skills: ['skills', 'capabilities', 'expertise', 'technologies', 'tools', 'technical', 'design'],
+            projects: ['projects', 'work', 'portfolio', 'protogen', 'cases', 'examples', 'built', 'created'],
+            experience: ['experience', 'career', 'history', 'jobs', 'roles', 'worked', 'professional'],
+            contact: ['contact', 'hire', 'collaborate', 'email', 'reach', 'connect', 'available'],
+            ai: ['ai', 'artificial intelligence', 'machine learning', 'llm', 'openai', 'chatgpt'],
+            navigation: ['show', 'take me', 'navigate', 'go to', 'see', 'view', 'find']
+        };
+        
+        let bestMatch = { type: 'default', score: 0, keywords: [] };
+        
+        for (const [type, typeKeywords] of Object.entries(keywords)) {
+            const matches = typeKeywords.filter(keyword => message.includes(keyword));
+            const score = matches.length;
+            
+            if (score > bestMatch.score) {
+                bestMatch = { type, score, keywords: matches };
+            }
         }
         
-        if (lowerMessage.includes('ai') || lowerMessage.includes('artificial intelligence')) {
-            return "Jane specializes in integrating AI technology into design workflows. Her current project, Protogen 101, demonstrates practical LLM integration for portfolio navigation and user interaction.";
+        return bestMatch;
+    }
+    
+    /**
+     * Generate about response
+     */
+    generateAboutResponse(intent) {
+        const personal = this.portfolioData.personal;
+        
+        if (intent.keywords.includes('philosophy') || intent.keywords.includes('approach')) {
+            return `${personal.name}'s design philosophy centers on ${personal.tagline.toLowerCase()}. She believes in creating intuitive interfaces that leverage AI capabilities while maintaining exceptional user experiences.`;
         }
         
-        if (lowerMessage.includes('skills') || lowerMessage.includes('technical')) {
-            return "Jane's technical skills include JavaScript, CSS3, HTML5, API integration, and responsive design. She also has expertise in prompt engineering and conversational UI design.";
+        return `${personal.name} is a ${personal.title} based ${personal.location}. ${personal.bio} Her expertise includes ${personal.expertise.slice(0, 3).join(', ')}, and more.`;
+    }
+    
+    /**
+     * Generate skills response
+     */
+    generateSkillsResponse(intent) {
+        const skills = this.portfolioData.skills;
+        
+        if (intent.keywords.includes('technical')) {
+            const techSkills = skills.technical.skills.slice(0, 4).map(s => s.name);
+            return `Jane's technical skills include ${techSkills.join(', ')}. She specializes in modern web development and API integration for AI-powered applications.`;
         }
         
-        if (lowerMessage.includes('contact') || lowerMessage.includes('hire') || lowerMessage.includes('work')) {
-            return "Jane is available for design consultation and collaboration. You can reach out through the contact form on her portfolio page to discuss potential projects.";
+        if (intent.keywords.includes('design')) {
+            const designSkills = skills.design.skills.slice(0, 4).map(s => s.name);
+            return `Jane's design expertise covers ${designSkills.join(', ')}. She focuses on user-centered design processes and creating accessible digital experiences.`;
         }
         
-        if (lowerMessage.includes('projects') || lowerMessage.includes('work') || lowerMessage.includes('portfolio')) {
-            return "Jane's current focus is on Protogen 101, an AI-powered portfolio navigator. She has experience in UX design, frontend development, and AI integration projects. Would you like to know more about any specific area?";
+        // General skills overview
+        const categories = Object.keys(skills);
+        return `Jane has expertise across ${categories.length} main areas: ${categories.map(cat => skills[cat].title).join(', ')}. Would you like to explore any specific skill area in detail?`;
+    }
+    
+    /**
+     * Generate projects response
+     */
+    generateProjectsResponse(intent) {
+        const projects = this.portfolioData.projects;
+        
+        if (intent.keywords.includes('protogen')) {
+            const protogen = projects.find(p => p.id === 'protogen-101');
+            return `${protogen.name} is ${protogen.description} It features ${protogen.features.slice(0, 3).join(', ')}, and more. Currently ${protogen.status.toLowerCase()}.`;
         }
         
-        // Default response
-        return "I'd be happy to help you learn more about Jane's work! You can ask me about her design experience, technical skills, AI projects, or how to get in touch for collaboration opportunities.";
+        // General projects overview
+        const activeProjects = projects.filter(p => p.status !== 'Concept');
+        const conceptProjects = projects.filter(p => p.status === 'Concept');
+        
+        return `Jane has ${projects.length} featured projects: ${activeProjects.length} in development and ${conceptProjects.length} in concept phase. Her work spans ${[...new Set(projects.map(p => p.category))].join(', ')} development. Would you like details about any specific project?`;
+    }
+    
+    /**
+     * Generate experience response
+     */
+    generateExperienceResponse(intent) {
+        const experience = this.portfolioData.experience;
+        
+        if (experience.length > 0) {
+            const current = experience[0];
+            const totalYears = experience.reduce((years, exp) => {
+                const duration = exp.period.includes('Present') ? 2 : 2; // Simplified calculation
+                return years + duration;
+            }, 0);
+            
+            return `Jane has ${totalYears}+ years of professional experience. Currently ${current.title} at ${current.company}, where she ${current.description.toLowerCase()} Key achievements include ${current.achievements[0].toLowerCase()}`;
+        }
+        
+        return "Jane brings extensive experience in UX design and AI integration to her projects.";
+    }
+    
+    /**
+     * Generate contact response
+     */
+    generateContactResponse(intent) {
+        const personal = this.portfolioData.personal;
+        
+        if (intent.keywords.includes('available') || intent.keywords.includes('hire')) {
+            return `${personal.availability} ${personal.contact.email} You can also ${personal.contact.linkedin} or ${personal.contact.portfolio}`;
+        }
+        
+        return `I'd be happy to help connect you with Jane! ${personal.contact.email} for collaboration opportunities. She's currently ${personal.availability.toLowerCase()}`;
+    }
+    
+    /**
+     * Generate AI-specific response
+     */
+    generateAIResponse(intent) {
+        const aiSkills = this.portfolioData.skills.ai.skills;
+        const protogen = this.portfolioData.projects.find(p => p.id === 'protogen-101');
+        
+        return `Jane specializes in ${aiSkills.slice(0, 3).map(s => s.name).join(', ')}. Her current project, ${protogen.name}, demonstrates ${protogen.description} This chat interface you're using is part of that project!`;
+    }
+    
+    /**
+     * Generate navigation response
+     */
+    generateNavigationResponse(intent) {
+        const sections = this.portfolioData.sections;
+        const sectionNames = Object.keys(sections);
+        
+        return `I can help you explore Jane's portfolio! Available sections include: ${sectionNames.map(s => sections[s].title).join(', ')}. Just ask about any area you'd like to learn more about, or say something like "show me projects" or "tell me about skills".`;
+    }
+    
+    /**
+     * Generate default response
+     */
+    generateDefaultResponse() {
+        const suggestions = [
+            "her design experience and technical skills",
+            "current projects like Protogen 101",
+            "AI integration expertise",
+            "how to get in touch for collaboration"
+        ];
+        
+        return `I'd be happy to help you learn more about Jane's work! You can ask me about ${suggestions.join(', ')}, or anything else you'd like to know.`;
     }
 
     /**
@@ -671,6 +1159,76 @@ class PortfolioNavigator {
         // Also add as chat message
         this.addMessage('ai', `❌ ${message}`);
     }
+    
+    /**
+     * Show API key setup prompt
+     */
+    showAPIKeyPrompt() {
+        const apiKey = prompt(
+            'To enable AI responses, please enter your OpenAI API key:\n\n' +
+            '• Get your API key from: https://platform.openai.com/account/api-keys\n' +
+            '• Key format: sk-...\n' +
+            '• Your key is stored locally and never shared\n\n' +
+            'Leave empty to continue with basic responses.'
+        );
+        
+        if (apiKey) {
+            if (this.setAPIKey(apiKey)) {
+                this.addMessage('ai', '✅ API key set successfully! I can now provide more intelligent responses powered by AI.');
+                return true;
+            } else {
+                this.showError('Invalid API key format. Please check your key and try again.');
+                return false;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Check API key status and prompt if needed
+     */
+    checkAPIKeyStatus() {
+        if (!this.apiKey) {
+            const shouldSetup = confirm(
+                'Would you like to set up AI-powered responses?\n\n' +
+                'This requires an OpenAI API key for enhanced conversation capabilities.'
+            );
+            
+            if (shouldSetup) {
+                return this.showAPIKeyPrompt();
+            }
+        }
+        
+        return !!this.apiKey;
+    }
+    
+    /**
+     * Handle API errors with user-friendly messages
+     */
+    handleAPIError(error) {
+        console.error('🚨 API Error:', error);
+        
+        if (error.message.includes('API key')) {
+            this.addMessage('ai', 
+                '🔑 API key issue detected. ' +
+                'You can continue with basic responses, or set up your OpenAI API key for enhanced AI features.'
+            );
+            this.clearAPIKey();
+        } else if (error.message.includes('rate limit')) {
+            this.addMessage('ai', 
+                '⏱️ Too many requests. Please wait a moment before sending another message.'
+            );
+        } else if (error.message.includes('network') || error.message.includes('fetch')) {
+            this.addMessage('ai', 
+                '🌐 Connection issue. Please check your internet connection and try again.'
+            );
+        } else {
+            this.addMessage('ai', 
+                '🤖 AI service temporarily unavailable. Switching to basic response mode.'
+            );
+        }
+    }
 
     /**
      * Generate unique conversation ID
@@ -684,6 +1242,503 @@ class PortfolioNavigator {
      */
     delay(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    /**
+     * Get portfolio section metadata for navigation
+     */
+    getPortfolioSectionMetadata(sectionName) {
+        const section = this.portfolioData.sections[sectionName];
+        if (!section) return null;
+        
+        return {
+            title: section.title,
+            description: section.description,
+            keywords: section.keywords,
+            url: `#${sectionName}`,
+            content: this.getPortfolioContent(section.content)
+        };
+    }
+    
+    /**
+     * Get specific portfolio content by type
+     */
+    getPortfolioContent(contentType) {
+        switch (contentType) {
+            case 'personal':
+                return this.portfolioData.personal;
+            case 'projects':
+                return this.portfolioData.projects;
+            case 'skills':
+                return this.portfolioData.skills;
+            case 'experience':
+                return this.portfolioData.experience;
+            case 'contact':
+                return this.portfolioData.personal.contact;
+            default:
+                return null;
+        }
+    }
+    
+    /**
+     * Find related portfolio items based on keywords
+     */
+    findRelatedContent(keywords, excludeId = null) {
+        const related = [];
+        
+        // Check projects
+        this.portfolioData.projects.forEach(project => {
+            if (excludeId && project.id === excludeId) return;
+            
+            const matches = keywords.filter(keyword => 
+                project.tags.some(tag => tag.toLowerCase().includes(keyword.toLowerCase())) ||
+                project.description.toLowerCase().includes(keyword.toLowerCase())
+            );
+            
+            if (matches.length > 0) {
+                related.push({
+                    type: 'project',
+                    item: project,
+                    relevance: matches.length
+                });
+            }
+        });
+        
+        // Check skills
+        Object.entries(this.portfolioData.skills).forEach(([category, skillData]) => {
+            skillData.skills.forEach(skill => {
+                const matches = keywords.filter(keyword =>
+                    skill.name.toLowerCase().includes(keyword.toLowerCase()) ||
+                    skill.description.toLowerCase().includes(keyword.toLowerCase())
+                );
+                
+                if (matches.length > 0) {
+                    related.push({
+                        type: 'skill',
+                        category: category,
+                        item: skill,
+                        relevance: matches.length
+                    });
+                }
+            });
+        });
+        
+        // Sort by relevance
+        return related.sort((a, b) => b.relevance - a.relevance);
+    }
+    
+    /**
+     * Search portfolio content
+     */
+    searchPortfolioContent(query) {
+        const results = [];
+        const searchTerms = query.toLowerCase().split(' ');
+        
+        // Search projects
+        this.portfolioData.projects.forEach(project => {
+            let score = 0;
+            searchTerms.forEach(term => {
+                if (project.name.toLowerCase().includes(term)) score += 3;
+                if (project.description.toLowerCase().includes(term)) score += 2;
+                if (project.technologies.some(tech => tech.toLowerCase().includes(term))) score += 2;
+                if (project.tags.some(tag => tag.toLowerCase().includes(term))) score += 1;
+            });
+            
+            if (score > 0) {
+                results.push({
+                    type: 'project',
+                    item: project,
+                    score: score
+                });
+            }
+        });
+        
+        // Search skills
+        Object.entries(this.portfolioData.skills).forEach(([category, skillData]) => {
+            skillData.skills.forEach(skill => {
+                let score = 0;
+                searchTerms.forEach(term => {
+                    if (skill.name.toLowerCase().includes(term)) score += 3;
+                    if (skill.description.toLowerCase().includes(term)) score += 2;
+                });
+                
+                if (score > 0) {
+                    results.push({
+                        type: 'skill',
+                        category: category,
+                        item: skill,
+                        score: score
+                    });
+                }
+            });
+        });
+        
+        // Search experience
+        this.portfolioData.experience.forEach(exp => {
+            let score = 0;
+            searchTerms.forEach(term => {
+                if (exp.title.toLowerCase().includes(term)) score += 3;
+                if (exp.company.toLowerCase().includes(term)) score += 2;
+                if (exp.description.toLowerCase().includes(term)) score += 1;
+            });
+            
+            if (score > 0) {
+                results.push({
+                    type: 'experience',
+                    item: exp,
+                    score: score
+                });
+            }
+        });
+        
+        // Sort by score and return top results
+        return results.sort((a, b) => b.score - a.score).slice(0, 5);
+    }
+    
+    /**
+     * Generate content suggestions based on current context
+     */
+    generateContentSuggestions(currentTopic = null) {
+        const suggestions = [];
+        
+        // Add popular queries
+        suggestions.push(
+            "Tell me about Jane's AI integration experience",
+            "What projects has Jane worked on?",
+            "Show me Jane's technical skills",
+            "How can I get in touch with Jane?"
+        );
+        
+        // Add context-specific suggestions
+        if (currentTopic) {
+            if (currentTopic.includes('project')) {
+                suggestions.push("What other projects has Jane created?");
+            }
+            if (currentTopic.includes('skill')) {
+                suggestions.push("What technical skills does Jane have?");
+            }
+            if (currentTopic.includes('ai')) {
+                suggestions.push("Tell me more about Jane's AI expertise");
+            }
+        }
+        
+        return suggestions.slice(0, 4); // Limit to 4 suggestions
+    }
+
+    // =====================================
+    // INTELLIGENT NAVIGATION SYSTEM
+    // =====================================
+    
+    /**
+     * Process navigation intent and perform action
+     */
+    async processNavigationIntent(message, intent) {
+        const navigationAction = this.extractNavigationAction(message);
+        
+        switch (navigationAction.type) {
+            case 'deep_link':
+                return await this.performDeepLink(navigationAction.target, navigationAction.context);
+            case 'preview':
+                return await this.generateContentPreview(navigationAction.target);
+            case 'search':
+                return await this.performPortfolioSearch(navigationAction.query);
+            case 'suggest':
+                return await this.generateSmartSuggestions(navigationAction.context);
+            default:
+                return this.generateNavigationHelp();
+        }
+    }
+    
+    /**
+     * Extract navigation action from user message
+     */
+    extractNavigationAction(message) {
+        const lowerMessage = message.toLowerCase();
+        
+        // Deep linking patterns
+        if (lowerMessage.includes('show me') || lowerMessage.includes('take me to') || lowerMessage.includes('go to')) {
+            if (lowerMessage.includes('project')) {
+                const projectMatch = this.portfolioData.projects.find(p => 
+                    lowerMessage.includes(p.name.toLowerCase()) || 
+                    p.tags.some(tag => lowerMessage.includes(tag.toLowerCase()))
+                );
+                return { type: 'deep_link', target: 'project', context: projectMatch?.id };
+            }
+            
+            if (lowerMessage.includes('skill') || lowerMessage.includes('technical')) {
+                return { type: 'deep_link', target: 'skills', context: 'technical' };
+            }
+            
+            if (lowerMessage.includes('about') || lowerMessage.includes('bio')) {
+                return { type: 'deep_link', target: 'about', context: null };
+            }
+            
+            if (lowerMessage.includes('contact') || lowerMessage.includes('hire')) {
+                return { type: 'deep_link', target: 'contact', context: null };
+            }
+        }
+        
+        // Preview patterns
+        if (lowerMessage.includes('preview') || lowerMessage.includes('look at') || lowerMessage.includes('see')) {
+            return { type: 'preview', target: this.identifyPreviewTarget(lowerMessage) };
+        }
+        
+        // Search patterns
+        if (lowerMessage.includes('find') || lowerMessage.includes('search')) {
+            const query = message.replace(/find|search|for/gi, '').trim();
+            return { type: 'search', query: query };
+        }
+        
+        // Suggestion patterns
+        if (lowerMessage.includes('suggest') || lowerMessage.includes('recommend') || lowerMessage.includes('what should')) {
+            return { type: 'suggest', context: lowerMessage };
+        }
+        
+        return { type: 'unknown' };
+    }
+    
+    /**
+     * Perform deep linking to portfolio sections
+     */
+    async performDeepLink(target, context = null) {
+        const linkData = this.generateDeepLinkData(target, context);
+        
+        if (!linkData) {
+            return "I couldn't find that section. Try asking about 'projects', 'skills', 'about', or 'contact'.";
+        }
+        
+        // Generate preview content for the target
+        const previewContent = await this.generateContentPreview(linkData);
+        
+        // Show portfolio preview if UI element exists
+        this.showPortfolioPreview(linkData);
+        
+        // Track navigation event
+        this.trackEvent('navigation_performed', {
+            target: target,
+            context: context,
+            conversationId: this.currentConversationId
+        });
+        
+        return `📍 Here's ${linkData.title}: ${previewContent}`;
+    }
+    
+    /**
+     * Generate deep link data for portfolio sections
+     */
+    generateDeepLinkData(target, context) {
+        switch (target) {
+            case 'project':
+                if (context) {
+                    const project = this.portfolioData.projects.find(p => p.id === context);
+                    return project ? {
+                        title: project.name,
+                        url: project.url,
+                        type: 'project',
+                        data: project
+                    } : null;
+                }
+                return {
+                    title: 'Projects Overview',
+                    url: '#projects',
+                    type: 'projects',
+                    data: this.portfolioData.projects
+                };
+                
+            case 'skills':
+                const skillCategory = context || 'all';
+                return {
+                    title: `Skills - ${skillCategory}`,
+                    url: `#skills-${skillCategory}`,
+                    type: 'skills',
+                    data: this.portfolioData.skills[skillCategory] || this.portfolioData.skills
+                };
+                
+            case 'about':
+                return {
+                    title: 'About Jane',
+                    url: '#about',
+                    type: 'about',
+                    data: this.portfolioData.personal
+                };
+                
+            case 'contact':
+                return {
+                    title: 'Contact Information',
+                    url: '#contact',
+                    type: 'contact',
+                    data: this.portfolioData.personal.contact
+                };
+                
+            default:
+                return null;
+        }
+    }
+    
+    /**
+     * Generate dynamic content preview
+     */
+    async generateContentPreview(linkData) {
+        if (!linkData) return "Content not found.";
+        
+        switch (linkData.type) {
+            case 'project':
+                const project = linkData.data;
+                return `${project.description} Built with ${project.technologies.slice(0, 3).join(', ')}. Status: ${project.status}.`;
+                
+            case 'projects':
+                const projectCount = linkData.data.length;
+                const categories = [...new Set(linkData.data.map(p => p.category))];
+                return `${projectCount} featured projects across ${categories.join(', ')} development. Recent focus: ${linkData.data[0].name}.`;
+                
+            case 'skills':
+                if (linkData.data.skills) {
+                    // Single category
+                    const topSkills = linkData.data.skills.slice(0, 4);
+                    return `Expertise in ${topSkills.map(s => s.name).join(', ')}. ${linkData.data.title} focus.`;
+                } else {
+                    // All categories
+                    const categories = Object.keys(linkData.data);
+                    return `Skills across ${categories.length} areas: ${categories.map(cat => linkData.data[cat].title).join(', ')}.`;
+                }
+                
+            case 'about':
+                const personal = linkData.data;
+                return `${personal.title} specializing in ${personal.expertise.slice(0, 3).join(', ')}. ${personal.tagline}`;
+                
+            case 'contact':
+                return `${this.portfolioData.personal.availability} Contact through portfolio for collaboration opportunities.`;
+                
+            default:
+                return "Preview not available.";
+        }
+    }
+    
+    /**
+     * Perform smart portfolio search
+     */
+    async performPortfolioSearch(query) {
+        if (!query || query.length < 2) {
+            return "Please provide a search term. You can search for projects, skills, technologies, or any content.";
+        }
+        
+        const results = this.searchPortfolioContent(query);
+        
+        if (results.length === 0) {
+            return `No results found for "${query}". Try searching for terms like "AI", "design", "JavaScript", or specific project names.`;
+        }
+        
+        // Format search results
+        let response = `🔍 Found ${results.length} result(s) for "${query}":\n\n`;
+        
+        results.slice(0, 3).forEach((result, index) => {
+            switch (result.type) {
+                case 'project':
+                    response += `${index + 1}. **${result.item.name}** (Project)\n   ${result.item.description}\n\n`;
+                    break;
+                case 'skill':
+                    response += `${index + 1}. **${result.item.name}** (${result.category} Skill)\n   ${result.item.description}\n\n`;
+                    break;
+                case 'experience':
+                    response += `${index + 1}. **${result.item.title}** at ${result.item.company}\n   ${result.item.description}\n\n`;
+                    break;
+            }
+        });
+        
+        if (results.length > 3) {
+            response += `...and ${results.length - 3} more results.`;
+        }
+        
+        // Track search event
+        this.trackEvent('portfolio_search', {
+            query: query,
+            resultCount: results.length,
+            conversationId: this.currentConversationId
+        });
+        
+        return response;
+    }
+    
+    /**
+     * Generate smart suggestions based on conversation context
+     */
+    async generateSmartSuggestions(context) {
+        const suggestions = [];
+        
+        // Analyze context for relevant suggestions
+        if (context.includes('project')) {
+            suggestions.push(
+                "Explore Jane's latest AI integration project",
+                "See the technical implementation of Protogen 101",
+                "Learn about Jane's design system work"
+            );
+        } else if (context.includes('skill')) {
+            suggestions.push(
+                "Discover Jane's AI and machine learning expertise",
+                "Explore her frontend development capabilities",
+                "Learn about her UX research methodologies"
+            );
+        } else if (context.includes('contact') || context.includes('collaborate')) {
+            suggestions.push(
+                "View Jane's availability for new projects",
+                "Learn about her collaboration approach",
+                "See testimonials from previous clients"
+            );
+        } else {
+            // General suggestions
+            suggestions.push(
+                "Explore Jane's AI portfolio navigator project",
+                "Learn about her design and development expertise",
+                "Discover her approach to human-centered AI design",
+                "Find out how to collaborate with Jane"
+            );
+        }
+        
+        const randomSuggestions = suggestions.slice(0, 3);
+        return `💡 Here are some suggestions:\n\n${randomSuggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}`;
+    }
+    
+    /**
+     * Identify preview target from message
+     */
+    identifyPreviewTarget(message) {
+        const lowerMessage = message.toLowerCase();
+        
+        // Check for specific project names
+        const project = this.portfolioData.projects.find(p => 
+            lowerMessage.includes(p.name.toLowerCase())
+        );
+        
+        if (project) {
+            return this.generateDeepLinkData('project', project.id);
+        }
+        
+        // Check for general categories
+        if (lowerMessage.includes('skill')) {
+            return this.generateDeepLinkData('skills', null);
+        }
+        
+        if (lowerMessage.includes('project')) {
+            return this.generateDeepLinkData('project', null);
+        }
+        
+        if (lowerMessage.includes('about') || lowerMessage.includes('profile')) {
+            return this.generateDeepLinkData('about', null);
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Generate navigation help
+     */
+    generateNavigationHelp() {
+        return `🧭 I can help you navigate Jane's portfolio! Try saying:\n\n` +
+               `• "Show me projects" or "Take me to the AI project"\n` +
+               `• "Preview Jane's skills" or "Look at her design work"\n` +
+               `• "Search for JavaScript" or "Find AI projects"\n` +
+               `• "Suggest something interesting" for recommendations\n\n` +
+               `What would you like to explore?`;
     }
 
     /**
