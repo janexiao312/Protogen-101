@@ -470,3 +470,184 @@ window.ProfilePage = {
     copyToClipboard,
     showNotification
 };
+
+/**
+ * ==========================================
+ * WEATHER WIDGET FUNCTIONALITY
+ * ==========================================
+ */
+
+/**
+ * Weather widget configuration and state
+ */
+const WeatherWidget = {
+    // Mock data for demonstration (replace with real API)
+    mockData: {
+        current: {
+            city: 'San Francisco',
+            temperature: 24,
+            feelsLike: 26,
+            humidity: 65,
+            windSpeed: 12,
+            description: 'sunny',
+            emoji: '☀️'
+        },
+        forecast: [
+            { day: 'Today', emoji: '☀️', high: 26, low: 18 },
+            { day: 'Tomorrow', emoji: '⛅', high: 23, low: 16 },
+            { day: 'Thursday', emoji: '🌧️', high: 20, low: 14 }
+        ]
+    },
+
+    // Weather emoji mapping
+    emojiMap: {
+        'clear': '☀️',
+        'sunny': '☀️',
+        'partly cloudy': '⛅',
+        'cloudy': '☁️',
+        'overcast': '☁️',
+        'rainy': '🌧️',
+        'rain': '🌧️',
+        'stormy': '⛈️',
+        'snow': '❄️',
+        'snowy': '❄️',
+        'foggy': '🌫️',
+        'windy': '🌬️'
+    },
+
+    /**
+     * Initialize weather widget
+     */
+    init() {
+        this.updateWeatherDisplay();
+        this.startAutoRefresh();
+        this.setupWeatherAnimations();
+        console.log('🌤️ Weather widget initialized');
+    },
+
+    /**
+     * Update weather display with current data
+     */
+    updateWeatherDisplay() {
+        const { current, forecast } = this.mockData;
+        
+        // Update current weather
+        document.getElementById('weather-city').textContent = current.city;
+        document.getElementById('current-temp').textContent = current.temperature;
+        document.getElementById('weather-description').textContent = current.description;
+        document.getElementById('weather-emoji').textContent = current.emoji;
+        document.getElementById('feels-like').textContent = `${current.feelsLike}°C`;
+        document.getElementById('humidity').textContent = `${current.humidity}%`;
+        document.getElementById('wind-speed').textContent = `${current.windSpeed} km/h`;
+        
+        // Update forecast
+        const forecastItems = document.querySelectorAll('.forecast-item');
+        forecast.forEach((day, index) => {
+            if (forecastItems[index]) {
+                forecastItems[index].querySelector('.forecast-day').textContent = day.day;
+                forecastItems[index].querySelector('.forecast-icon').textContent = day.emoji;
+                forecastItems[index].querySelector('.forecast-high').textContent = `${day.high}°`;
+                forecastItems[index].querySelector('.forecast-low').textContent = `${day.low}°`;
+            }
+        });
+        
+        // Update timestamp
+        document.getElementById('last-updated').textContent = 'Just now';
+    },
+
+    /**
+     * Simulate weather data changes (for demonstration)
+     */
+    simulateWeatherChange() {
+        const conditions = ['sunny', 'partly cloudy', 'cloudy', 'rainy'];
+        const randomCondition = conditions[Math.floor(Math.random() * conditions.length)];
+        
+        // Update temperature with slight variation
+        this.mockData.current.temperature += Math.floor(Math.random() * 6) - 3;
+        this.mockData.current.description = randomCondition;
+        this.mockData.current.emoji = this.emojiMap[randomCondition];
+        
+        // Update humidity and wind
+        this.mockData.current.humidity = Math.floor(Math.random() * 40) + 40;
+        this.mockData.current.windSpeed = Math.floor(Math.random() * 20) + 5;
+        this.mockData.current.feelsLike = this.mockData.current.temperature + Math.floor(Math.random() * 4);
+        
+        this.updateWeatherDisplay();
+        console.log('🌤️ Weather updated:', randomCondition);
+    },
+
+    /**
+     * Start auto-refresh timer
+     */
+    startAutoRefresh() {
+        // Simulate weather updates every 30 seconds
+        setInterval(() => {
+            this.simulateWeatherChange();
+        }, 30000);
+    },
+
+    /**
+     * Setup weather-specific animations
+     */
+    setupWeatherAnimations() {
+        const weatherIcon = document.querySelector('.weather-emoji');
+        if (weatherIcon) {
+            weatherIcon.addEventListener('click', () => {
+                weatherIcon.style.animation = 'none';
+                setTimeout(() => {
+                    weatherIcon.style.animation = 'float 3s ease-in-out infinite';
+                }, 100);
+            });
+        }
+
+        // Add click handlers to forecast items
+        document.querySelectorAll('.forecast-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                this.showForecastDetail(e.currentTarget);
+            });
+        });
+    },
+
+    /**
+     * Show forecast detail (placeholder for future functionality)
+     */
+    showForecastDetail(forecastItem) {
+        const day = forecastItem.querySelector('.forecast-day').textContent;
+        console.log(`📅 Forecast clicked for: ${day}`);
+        
+        // Add visual feedback
+        forecastItem.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            forecastItem.style.transform = '';
+        }, 150);
+    },
+
+    /**
+     * Get user's location and fetch weather (placeholder for future API integration)
+     */
+    async getUserLocation() {
+        if (navigator.geolocation) {
+            try {
+                const position = await new Promise((resolve, reject) => {
+                    navigator.geolocation.getCurrentPosition(resolve, reject);
+                });
+                
+                const { latitude, longitude } = position.coords;
+                console.log('📍 User location:', latitude, longitude);
+                
+                // Here you would typically call a weather API
+                // await this.fetchWeatherData(latitude, longitude);
+                
+            } catch (error) {
+                console.log('❌ Location access denied, using default location');
+            }
+        }
+    }
+};
+
+// Initialize weather widget when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        WeatherWidget.init();
+    }, 1000); // Delay to let page load animation complete
+});
